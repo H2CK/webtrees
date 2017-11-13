@@ -8,8 +8,8 @@ usermod -a -G docker-data,adm www-data
 # user config
 cat <<'EOT' > /etc/my_init.d/01_user_config.sh
 #!/bin/bash
-GROUPID=${GROUP_ID:-100}
-groupmod -g $GROUP_ID docker-data 
+GROUPID=${GROUP_ID:-999}
+groupmod -g $GROUPID docker-data 
 EOT
 
 # auto update
