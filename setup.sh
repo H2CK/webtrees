@@ -13,11 +13,15 @@ groupmod -g $GROUPID docker-data
 EOT
 
 # auto update
+UPDT_ON_START=${UPDATE_ON_START:-FALSE}
+if [ "$UPDT_ON_START" == "TRUE"]
+then
 cat <<'EOT' > /etc/my_init.d/02_auto_update.sh
 #!/bin/bash
 apt-get update -qq
 apt-get upgrade -qy
 EOT
+fi
 
 #set Port for Apache to listen to
 cat <<'EOT' > /etc/my_init.d/03_set_a2port.sh
