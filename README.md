@@ -45,6 +45,6 @@ It is possible to use additional 3rd party modules of webtrees with this contain
 * `-e ENABLE_REMOTE_USER` - if set to TRUE use REMOTE_USER for authentication
 
 ## Versions
-+ **30.08.2018:** Update to webtrees 1.7.10 and Ubuntu 18.04
 + **13.10.2017:** Initial release. webtrees 1.7.9
-+ **27.06.2017:** Webtrees 1.7.9 - Added switch to active/deactive auto update functionality
++ **27.06.2018:** Webtrees 1.7.9 - Added switch to active/deactive auto update functionality
++ **30.08.2018:** Webtrees 1.7.10 - Now using baseimage Ubuntu 18.04 / Added possibility to use external authentication using REMOTE_USER
