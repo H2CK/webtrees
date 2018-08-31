@@ -45,7 +45,7 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     && a2dissite 000-default \
     && mkdir /crt \
     && chmod 750 /crt \
-    && openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout /crt/webtrees.key -out /crt/webtrees.crt -subj "/C=/ST=/L=/O=Webtrees/OU=www.webtrees.net/CN=webtrees" \ 
+    && openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout /crt/webtrees.key -out /crt/webtrees.crt -subj "/C=DE/ST=H/L=F/O=Webtrees/OU=www.webtrees.net/CN=webtrees" \ 
     && chmod 640 /crt/* \
     && wget -q https://github.com/fisharebest/webtrees/releases/download/1.7.10/webtrees-1.7.10.zip -O /tmp/webtrees.zip \
     && unzip -d /tmp/ -o /tmp/webtrees.zip \
