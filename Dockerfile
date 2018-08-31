@@ -75,7 +75,7 @@ CMD ["./start.sh"]
 ADD Auth.php /Auth.php
        
 #Add Apache configuration
-ADD php.ini /etc/php/7.0/apache2/
+ADD php.ini /etc/php/7.2/apache2/
 ADD webtrees.conf /etc/apache2/sites-available/
 RUN chmod 644 /etc/apache2/sites-available/webtrees.conf \
     && a2dissite 000-default \
