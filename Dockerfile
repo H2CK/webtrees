@@ -26,7 +26,6 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     php-pear \
     php-imagick \
     php-imap \
-    php-mcrypt \
     php-memcache \
     php-pspell \
     php-recode \
