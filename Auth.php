@@ -152,7 +152,12 @@ class Auth {
 	 * @return string|null
 	 */
 	public static function id() {
+		$fp = fopen('/proc/self/fd/1', 'w');
+		fwrite($fp, 'Webtrees call id()');
+		fwrite($fp, '\n');
+		fclose($fp);
 		if (!empty($_SERVER['REMOTE_USER'])) {
+			
 			$fp = fopen('/proc/self/fd/1', 'w');
 			fwrite($fp, 'Authentication via REMOTE_USER: ');
 			fwrite($fp, $_SESSION['REMOTE_USER']);
