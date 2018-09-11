@@ -17,7 +17,7 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     apache2-utils \
     libexpat1 \
     ssl-cert \
-	vi \
+	vim-tiny \
     php \
     libapache2-mod-php \
     php-mysql \
