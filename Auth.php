@@ -153,13 +153,18 @@ class Auth {
 	 */
 	public static function id() {
 		if (!empty($_SERVER['REMOTE_USER'])) {
-      $user = User::findByUserName($_SESSION['REMOTE_USER']);
-      if ($user instanceof User) {
-        return $user->getUserId();
-      } else {
-        return null;
-      }
-    }
+			$fp = fopen('/proc/self/fd/1', 'w');
+			fwrite($fp, 'Authentication via REMOTE_USER: ');
+			fwrite($fp, $_SESSION['REMOTE_USER']);
+			fwrite($fp, '\n');
+			fclose($fp);
+			$user = User::findByUserName($_SESSION['REMOTE_USER']);
+			if ($user instanceof User) {
+				return $user->getUserId();
+			} else {
+				return null;
+			}
+		}
     return Session::get('wt_user');
 	}
 
