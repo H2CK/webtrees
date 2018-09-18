@@ -148,29 +148,24 @@ class Auth {
 
 	/**
 	 * The ID of the authenticated user, from the current session.
+         * $fp = fopen('/var/www/wt-login.log', 'w');
+	 * fwrite($fp, 'Authentication via REMOTE_USER: ');
+	 * fwrite($fp, $_SERVER['REMOTE_USER']);
+	 * fwrite($fp, '\n');
+	 * fclose($fp);
 	 *
 	 * @return string|null
 	 */
 	public static function id() {
-		$fp = fopen('/var/www/html/log.log', 'w');
-		fwrite($fp, 'Webtrees call id()');
-		fwrite($fp, '\n');
-		fclose($fp);
 		if (!empty($_SERVER['REMOTE_USER'])) {
-			
-			$fp = fopen('/var/www/html/log.log', 'w');
-			fwrite($fp, 'Authentication via REMOTE_USER: ');
-			fwrite($fp, $_SESSION['REMOTE_USER']);
-			fwrite($fp, '\n');
-			fclose($fp);
-			$user = User::findByUserName($_SESSION['REMOTE_USER']);
+			$user = User::findByUserName($_SERVER['REMOTE_USER']);
 			if ($user instanceof User) {
 				return $user->getUserId();
 			} else {
 				return null;
 			}
 		}
-    return Session::get('wt_user');
+    		return Session::get('wt_user');
 	}
 
 	/**
