@@ -157,15 +157,23 @@ class Auth {
 	 * @return string|null
 	 */
 	public static function id() {
-		if (!empty($_SERVER['REMOTE_USER'])) {
-			$user = User::findByUserName($_SERVER['REMOTE_USER']);
+		$headers = apache_request_headers();
+		$remote_user = null;
+		foreach ($headers as $header => $value) {
+			//echo "$header: $value <br />\n";
+			if ($header=="REMOTE_USER") {
+				$remote_user = $value;
+			}
+		}
+		if ($remote_user!=null) {
+			$user = User::findByUserName($remote_user);
 			if ($user instanceof User) {
 				return $user->getUserId();
 			} else {
 				return null;
 			}
 		}
-    		return Session::get('wt_user');
+    	return Session::get('wt_user');
 	}
 
 	/**
