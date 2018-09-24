@@ -80,7 +80,6 @@ ADD php.ini /etc/php/7.2/apache2/
 ADD webtrees.conf /etc/apache2/sites-available/
 
 RUN chmod 644 /etc/apache2/sites-available/webtrees.conf \
-    && chmod 770 /var/www/html/info.php \
     && a2dissite 000-default \
     && a2enmod ssl \
     && a2ensite webtrees
