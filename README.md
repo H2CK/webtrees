@@ -48,3 +48,4 @@ It is possible to use additional 3rd party modules of webtrees with this contain
 + **13.10.2017:** Initial release. webtrees 1.7.9
 + **27.06.2018:** Webtrees 1.7.9 - Added switch to active/deactive auto update functionality
 + **30.08.2018:** Webtrees 1.7.10 - Now using baseimage Ubuntu 18.04 / Added possibility to use external authentication using REMOTE_USER
++ **13.01.2019:** Webtrees 1.7.12
