@@ -1,4 +1,4 @@
-![Docker Pulls](https://img.shields.io/docker/pulls/dtjs48jkt/webtrees?style=plastic)![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/H2CK/webtrees?style=plastic)
+![Docker Pulls](https://img.shields.io/docker/pulls/dtjs48jkt/webtrees?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/H2CK/webtrees?style=plastic)
 # docker-webtrees
 [webtrees](http://www.webtrees.net) is a free open source web-based genealogy application intended for collaborative use.
 It is compatible with standard 5.5.1-GEDCOM files. In this docker image based on phusion webtrees is provided. A database is not embedded in this image.
