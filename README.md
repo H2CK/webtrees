@@ -3,7 +3,7 @@
 [webtrees](http://www.webtrees.net) is a free open source web-based genealogy application intended for collaborative use.
 It is compatible with standard 5.5.1-GEDCOM files. In this docker image based on phusion webtrees is provided. A database is not embedded in this image.
 
-Since 12/07/19 version 2.0 is officially release. This version will also be available as docker image soon. Please stay tuned.
+Since 12/07/19 version 2.0 is officially release. This version is maintained in the master branch. The "old" legacy version is located in the legacy branch.
 
 ## Usage
 
