@@ -39,6 +39,7 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     php-gettext \
     php-opcache \
     php-apcu \
+    php-zip \
     wget \
     unzip \
     && a2enmod ssl \
