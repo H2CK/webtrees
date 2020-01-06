@@ -55,3 +55,4 @@ It is possible to use additional 3rd party modules of webtrees with this contain
 + **2019/05/08:** Webtrees 1.7.14
 + **2019/12/10:** Webtrees 1.7.16
 + **2019/12/10:** Webtrees 2.0.0
++ **2020/01/06:** Webtrees 2.0.1
