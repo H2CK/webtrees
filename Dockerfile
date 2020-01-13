@@ -67,11 +67,13 @@ COPY 01_user_config.sh ${start_scripts_path}
 COPY 02_auto_update.sh ${start_scripts_path}
 COPY 03_set_a2port.sh ${start_scripts_path}
 COPY 04_enable_REMOTE_USER.sh ${start_scripts_path}
+COPY 05_switch_http_https.sh ${start_scripts_path}
 COPY start.sh /start.sh
 RUN chmod +x ${start_scripts_path}/01_user_config.sh \
     && chmod +x ${start_scripts_path}/02_auto_update.sh \
     && chmod +x ${start_scripts_path}/03_set_a2port.sh \
     && chmod +x ${start_scripts_path}/04_enable_REMOTE_USER.sh \
+    && chmod +x ${start_scripts_path}/05_switch_http_https.sh \
     && chmod +x /start.sh
 
 CMD ["./start.sh"]
@@ -81,8 +83,10 @@ ADD Auth.php /Auth.php
 #Add Apache configuration
 ADD php.ini /etc/php/7.2/apache2/
 ADD webtrees.conf /etc/apache2/sites-available/
+ADD webtrees_insecure.conf /etc/apache2/sites-available/
 
 RUN chmod 644 /etc/apache2/sites-available/webtrees.conf \
+    && chmod 644 /etc/apache2/sites-available/webtrees_insecure.conf \
     && a2dissite 000-default \
     && a2enmod ssl \
     && a2ensite webtrees
