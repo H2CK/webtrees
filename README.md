@@ -30,10 +30,19 @@ If you use the --link parameter it is sufficient to set as database hostname db 
 Log data of the contained web-server is written in the files in the folder /var/log/apache2/. If access to those files is necessary this location could be mapped to an external volume.
 
 ## Port of Apache web server / Encryption
-This image only supports https based communication. Per default the Apache web server listens on port 443.
+This image supports per default https based communication on port 443. Alternatively you can use this image also only using http, e.g. if you only use it within your home network.
+
+### Details on encryption
 If it is necessary to change the default port (e.g. in case of collisions) you can set the optional parameter PORT to a different value.
 The https communication is based on a self signed certificate. It is possible to use an alternative certificate. Therfore you have to map the internal folder /crt to an external location. This folder should contain the two files webtrees.key (Key without password protection) und webtrees.crt (certificate). It is not possible to change further encryption settings from outside the container.
 If you want a more sofisticated encryption you should use a reverse proxy in front of the webtrees container.
+
+### Using http only
+It is possible to use the image without https support. For that you have to start the container with the following environament variables set.
+
+```
+docker run -d -p 80:80 --name webtrees --link mysql:db -v /webtrees/data:/var/www/html/data -v /webtrees/media:/var/www/html/media  -e DISABLE_SSL=TRUE -e PORT=80 --restart always dtjs48jkt/webtrees
+```
 
 ## Usage of additional 3rd party modules
 It is possible to use additional 3rd party modules of webtrees with this container. To use such modules it is necessary to mount those folders containing the module into the following location -v /var/www/html/modulesv3/<modulexxx>
@@ -46,6 +55,7 @@ It is possible to use additional 3rd party modules of webtrees with this contain
 * `-e PORT` - change port web server listens on
 * `-e UPDATE_ON_START` - if set to TRUE the auto-update functionality on restart is activated
 * `-e ENABLE_REMOTE_USER` - if set to TRUE use REMOTE_USER for authentication
+* `-e DISABLE_SSL` - if set to TRUE the image only provides an http entpoint. You should also set the port, because default port 443 is not modifed by this setting. 
 
 ## Versions
 + **2017/10/13:** Initial release. webtrees 1.7.9
@@ -56,3 +66,4 @@ It is possible to use additional 3rd party modules of webtrees with this contain
 + **2019/12/10:** Webtrees 1.7.16
 + **2019/12/10:** Webtrees 2.0.0
 + **2020/01/06:** Webtrees 2.0.1
++ **2020/01/13:** Webtrees 2.0.1 - Added possibility to use image without https (only http) for local networks
