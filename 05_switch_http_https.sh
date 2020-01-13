@@ -2,5 +2,9 @@
 HTTP_ONLY=${DISABLE_SSL:-FALSE}
 if [ "$HTTP_ONLY" = "TRUE" ]
 then
-cp -f /webtrees_insecure.conf /etc/apache2/
+  a2dissite webtrees
+  a2ensite webtrees_insecure
+else
+  a2dissite webtrees_insecure
+  a2ensite webtrees
 fi
