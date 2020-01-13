@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND="noninteractive" HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.U
 ENV supervisor_conf /etc/supervisor/supervisord.conf
 ENV security_conf /etc/apache2/conf-available/security.conf
 ENV start_scripts_path /bin
+ENV WT_VERSION="2.0.1"
 
 # Update packages from baseimage
 RUN apt-get update -qq
@@ -50,7 +51,7 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     && chmod 750 /crt \
     && openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout /crt/webtrees.key -out /crt/webtrees.crt -subj "/C=DE/ST=H/L=F/O=Webtrees/OU=www.webtrees.net/CN=webtrees" \ 
     && chmod 640 /crt/* \
-    && wget -q https://github.com/fisharebest/webtrees/releases/download/2.0.1/webtrees-2.0.1.zip -O /tmp/webtrees.zip \
+    && wget -q https://github.com/fisharebest/webtrees/releases/download/${WT_VERSION}/webtrees-${WT_VERSION}.zip -O /tmp/webtrees.zip \
     && unzip -d /tmp/ -o /tmp/webtrees.zip \
     && rm -Rf /var/www/html \
     && mv /tmp/webtrees /var/www/html \
@@ -67,11 +68,13 @@ COPY 01_user_config.sh ${start_scripts_path}
 COPY 02_auto_update.sh ${start_scripts_path}
 COPY 03_set_a2port.sh ${start_scripts_path}
 COPY 04_enable_REMOTE_USER.sh ${start_scripts_path}
+COPY 05_switch_http_https.sh ${start_scripts_path}
 COPY start.sh /start.sh
 RUN chmod +x ${start_scripts_path}/01_user_config.sh \
     && chmod +x ${start_scripts_path}/02_auto_update.sh \
     && chmod +x ${start_scripts_path}/03_set_a2port.sh \
     && chmod +x ${start_scripts_path}/04_enable_REMOTE_USER.sh \
+    && chmod +x ${start_scripts_path}/05_switch_http_https.sh \
     && chmod +x /start.sh
 
 CMD ["./start.sh"]
@@ -81,8 +84,10 @@ ADD Auth.php /Auth.php
 #Add Apache configuration
 ADD php.ini /etc/php/7.2/apache2/
 ADD webtrees.conf /etc/apache2/sites-available/
+ADD webtrees_insecure.conf /etc/apache2/sites-available/
 
 RUN chmod 644 /etc/apache2/sites-available/webtrees.conf \
+    && chmod 644 /etc/apache2/sites-available/webtrees_insecure.conf \
     && a2dissite 000-default \
     && a2enmod ssl \
     && a2ensite webtrees
