@@ -7,7 +7,6 @@ language: shell
 env:
   global:
     - QEMU_VERSION=v4.2.0-2
-    - S6_VERSION=v1.22.1.0
     - DOCKER_FILE=Dockerfile.travis
 
   jobs:
@@ -80,8 +79,6 @@ jobs:
               - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
               # Create and push manifest list `version` for default
-              - ./docker.sh manifest-list-version "12" "default"
-              - ./docker.sh manifest-list-version "10" "default"
               - ./docker.sh manifest-list-version "" "default"
 
               # Docker Logout
