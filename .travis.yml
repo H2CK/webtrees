@@ -1,0 +1,96 @@
+dist: xenial
+
+services: docker
+
+language: shell
+
+env:
+  global:
+    - QEMU_VERSION=v4.0.0
+    - S6_VERSION=v1.22.1.0
+    - DOCKER_FILE=Dockerfile
+
+  jobs:
+    - QEMU_ARCH=x86_64  ARCH=amd64   S6_ARCH=amd64
+    - QEMU_ARCH=arm     ARCH=arm32v7 S6_ARCH=armhf
+    - QEMU_ARCH=aarch64 ARCH=arm64v8 S6_ARCH=aarch64
+    - QEMU_ARCH=i386    ARCH=i386    S6_ARCH=i386
+    - QEMU_ARCH=ppc64le ARCH=ppc64le S6_ARCH=ppc64le
+    - QEMU_ARCH=s390x   ARCH=s390x   S6_ARCH=s390x
+
+before_install:
+  - ./.docker/docker.sh prepare
+
+install: true
+
+before_script:
+  # Set TARGET Docker Repo
+  # default TARGET = dtjs48jkt/webtrees-dev
+  # if TRAVIS_TAG starts with a `v` and only contains numbers, dots and/or dash then TARGET = dtjs48jkt/webtrees
+  - >
+    export TARGET=dtjs48jkt/webtrees-dev
+
+    if [[ "${TRAVIS_TAG}" =~ ^v[0-9\.-]*$ ]]; then
+      export TARGET=dtjs48jkt/webtrees
+    fi
+
+  # Set NODE_RED_VERSION from package.json
+  - >
+    export NODE_RED_VERSION=$(grep -oE "\"node-red\": \"(\w*.\w*.\w*.\w*.\w*.)" package.json | cut -d\" -f4)
+
+  # Set HOMEKIT_BRIDGED_VERSION from package.json
+  - >
+    export HOMEKIT_BRIDGED_VERSION=$(grep -oE "\"node-red-contrib-homekit-bridged\": \"(\w*.\w*.\w*.\w*.\w*.)" package.json | cut -d\" -f4)
+
+  # Set BUILD_VERSION
+  - >
+    if [ ! -z "${TRAVIS_TAG}" ]; then
+      export BUILD_VERSION=${TRAVIS_TAG:1};
+    fi
+
+script:
+  # Build Docker image
+  - ./.docker/docker.sh build
+
+  # Test Docker image
+  - ./.docker/docker.sh test
+
+  # Push Docker image, only if TRAVIS_TAG is set
+  - >
+    if [ ! -z "${TRAVIS_TAG}" ]; then
+      # Tag Docker image
+      ./.docker/docker.sh tag
+
+      # Docker Login
+      echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
+      # Push Docker image
+      ./.docker/docker.sh push
+
+      # Docker Logout
+      docker logout
+    fi
+
+jobs:
+    include:
+        - stage: manifest
+          # Only create and push manifest list to Docker Hub, when tag starts with a `v`, eg. v1.0.2
+          if: tag =~ ^v
+          script:
+              # Create and push Docker manifest lists
+              # The push order is displayed in reverse order on Docker Hub
+
+              # Docker Login
+              - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+              # Create and push manifest list `version` for default
+              - ./.docker/docker.sh manifest-list-version "12" "default"
+              - ./.docker/docker.sh manifest-list-version "10" "default"
+              - ./.docker/docker.sh manifest-list-version "" "default"
+
+              # Docker Logout
+              - docker logout
+
+# Notify me when things fail
+notifications:
+  email: true
