@@ -53,8 +53,6 @@ function docker_build() {
   echo "DOCKER BUILD: build version -> ${BUILD_VERSION}."
   echo "DOCKER BUILD: webtrees version -> ${WT_VERSION}."
   echo "DOCKER BUILD: qemu arch - ${QEMU_ARCH}."
-  echo "DOCKER BUILD: s6 arch - ${S6_ARCH}."
-  echo "DOCKER BUILD: s6 version - ${S6_VERSION}."
   echo "DOCKER BUILD: docker file - ${DOCKER_FILE}."
 
   docker build --no-cache \
@@ -64,9 +62,6 @@ function docker_build() {
     --build-arg BUILD_REF=${TRAVIS_COMMIT} \
     --build-arg WT_VERSION=${WT_VERSION} \
     --build-arg QEMU_ARCH=${QEMU_ARCH} \
-    --build-arg S6_ARCH=${S6_ARCH} \
-    --build-arg S6_VERSION=${S6_VERSION} \
-    --build-arg TAG_SUFFIX=${TAG_SUFFIX} \
     --file ./${DOCKER_FILE} \
     --tag ${TARGET}:build .
 }
@@ -100,24 +95,25 @@ function docker_push() {
 
 function docker_manifest_list_version() {
 
-  if [[ ${1} == "" ]]; then export NODE_VERSION=""; else export NODE_VERSION="-${1}"; fi
-  if [[ ${2} == "default" ]]; then export TAG_SUFFIX=""; else export TAG_SUFFIX="-${2}"; fi
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${BUILD_VERSION}-${WT_VERSION}."
 
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION}${TAG_SUFFIX}."
+  docker manifest create ${TARGET}:${BUILD_VERSION}-${WT_VERSION} \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-amd64 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-i386 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm32v7 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm64v8 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-ppc64le \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-s390x
 
-  docker manifest create ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION}${TAG_SUFFIX} \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-amd64 \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v6 \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v7 \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm64v8
-
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION}${TAG_SUFFIX} ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v6 --os=linux --arch=arm --variant=v6
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION}${TAG_SUFFIX} ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v7 --os=linux --arch=arm --variant=v7
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION}${TAG_SUFFIX} ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm64v8 --os=linux --arch=arm64 --variant=v8
-
-  docker manifest push ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION}${TAG_SUFFIX}
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-i386 --os=linux --arch=i386
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm64v8 --os=linux --arch=arm64 --variant=v8
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-ppc64le --os=linux --arch=ppc64le
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-s390x --os=linux --arch=s390x
   
-  docker run --rm mplatform/mquery ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION}${TAG_SUFFIX}
+  docker manifest push ${TARGET}:${BUILD_VERSION}-${WT_VERSION}
+  
+  docker run --rm mplatform/mquery ${TARGET}:${BUILD_VERSION}-${WT_VERSION}
 }
 
 function docker_manifest_list_test_beta_latest() {
@@ -130,24 +126,25 @@ function docker_manifest_list_test_beta_latest() {
     export TAG_PREFIX="latest";
   fi
 
-  if [[ ${1} == "" ]]; then export NODE_VERSION=""; else export NODE_VERSION="-${1}"; fi
-  if [[ ${2} == "default" ]]; then export TAG_SUFFIX=""; else export TAG_SUFFIX="-${2}"; fi
-
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX}."
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${TAG_PREFIX}."
 
   docker manifest create ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX} \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-amd64 \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v6 \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v7 \
-    ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm64v8
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-amd64 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-i386 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm32v7 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm64v8 \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-ppc64le \
+    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-s390x
 
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX} ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v6 --os=linux --arch=arm --variant=v6
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX} ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm32v7 --os=linux --arch=arm --variant=v7
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX} ${TARGET}:${BUILD_VERSION}-${NODE_RED_VERSION}${NODE_VERSION:--10}${TAG_SUFFIX}-arm64v8 --os=linux --arch=arm64 --variant=v8
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-i386 --os=linux --arch=i386
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm64v8 --os=linux --arch=arm64 --variant=v8
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-ppc64le --os=linux --arch=ppc64le
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-s390x --os=linux --arch=s390x
 
-  docker manifest push ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX}
+  docker manifest push ${TARGET}:${TAG_PREFIX}
   
-  docker run --rm mplatform/mquery ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX}
+  docker run --rm mplatform/mquery ${TARGET}:${TAG_PREFIX}
 }
 
 function setup_dependencies() {
