@@ -20,8 +20,8 @@ env:
 before_install:
   - pwd
   - ls -al
-  - ./docker.sh
-#  - docker.sh prepare
+  - chmod 775 docker.sh
+  - ./docker.sh prepare
 
 install: true
 
