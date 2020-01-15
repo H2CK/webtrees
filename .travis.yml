@@ -36,7 +36,8 @@ before_script:
 
   # Set WT_VERSION from Dockerfile
   - >
-    export WT_VERSION=$(grep -oE "\"WT-VERSION=\": \"(\w*.\w*.\w*.\w*.\w*.)" Dockerfile | cut -d\" -f4)
+    export WT_VERSION=$(grep -oE "WT_VERSION=(\w*.\w*.\w*)" Dockerfile.travis) 
+    # | cut -d\" -f4)
     
 
   # Set BUILD_VERSION
