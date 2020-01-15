@@ -18,8 +18,6 @@ env:
     - QEMU_ARCH=s390x   ARCH=s390x   S6_ARCH=s390x
 
 before_install:
-  - pwd
-  - ls -al
   - chmod 775 docker.sh
   - ./docker.sh prepare
 
@@ -39,6 +37,7 @@ before_script:
   # Set WT_VERSION from Dockerfile
   - >
     export WT_VERSION=$(grep -oE "\"WT-VERSION=\": \"(\w*.\w*.\w*.\w*.\w*.)" Dockerfile | cut -d\" -f4)
+    
 
   # Set BUILD_VERSION
   - >
