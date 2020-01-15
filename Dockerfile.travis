@@ -1,5 +1,5 @@
 ARG ARCH=amd64
-ARG WT_VERSION=2.0.1
+ENV WT_VERSION=2.0.1
 
 FROM ${ARCH}/ubuntu:bionic
 
