@@ -18,7 +18,9 @@ env:
     - QEMU_ARCH=s390x   ARCH=s390x   S6_ARCH=s390x
 
 before_install:
-  - ./docker.sh prepare
+  - pwd
+  - ls -al
+  - docker.sh prepare
 
 install: true
 
@@ -45,22 +47,22 @@ before_script:
 
 script:
   # Build Docker image
-  - ./docker.sh build
+  - docker.sh build
 
   # Test Docker image
-  - ./docker.sh test
+  - docker.sh test
 
   # Push Docker image, only if TRAVIS_TAG is set
   - >
     if [ ! -z "${TRAVIS_TAG}" ]; then
       # Tag Docker image
-      ./docker.sh tag
+      docker.sh tag
 
       # Docker Login
       echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
       # Push Docker image
-      ./docker.sh push
+      docker.sh push
 
       # Docker Logout
       docker logout
@@ -79,7 +81,7 @@ jobs:
               - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
               # Create and push manifest list `version` for default
-              - ./docker.sh manifest-list-version "" "default"
+              - docker.sh manifest-list-version "" "default"
 
               # Docker Logout
               - docker logout
