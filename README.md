@@ -5,7 +5,7 @@ It is compatible with standard 5.5.1-GEDCOM files. In this docker image based on
 
 Since 12/07/19 version 2.0 is officially released and also provided by this repository as docker image.
 
-This container now supports multi-arch support. That allows to run this image for example also on a Raspberry Pi.
+This container now supports multiple architectures. That allows to run this image for example also on a Raspberry Pi.
 Please use the corresponding newly introduced image tags using the following syntax: <webtrees version>-<build version>-<architecture>
 Supported architectures are: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
 
