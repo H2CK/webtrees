@@ -1,9 +1,13 @@
-![Docker Pulls](https://img.shields.io/docker/pulls/dtjs48jkt/webtrees?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/H2CK/webtrees?style=plastic)
+![Docker Build Status](https://img.shields.io/docker/build/dtjs48jkt/webtrees?style=plastic) ![Travis (.com) branch](https://img.shields.io/travis/com/H2CK/webtrees/master?label=multi-arch%20build&style=plastic) ![Docker Pulls](https://img.shields.io/docker/pulls/dtjs48jkt/webtrees?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/H2CK/webtrees?style=plastic)
 # docker-webtrees
 [webtrees](http://www.webtrees.net) is a free open source web-based genealogy application intended for collaborative use.
 It is compatible with standard 5.5.1-GEDCOM files. In this docker image based on phusion webtrees is provided. A database is not embedded in this image.
 
 Since 12/07/19 version 2.0 is officially released and also provided by this repository as docker image.
+
+This container now supports multiple architectures. That allows to run this image for example also on a Raspberry Pi.
+Please use the corresponding newly introduced image tags using the following syntax: <webtrees version>-<build version>-<architecture>
+Supported architectures are: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
 
 ## Usage
 
@@ -67,3 +71,4 @@ It is possible to use additional 3rd party modules of webtrees with this contain
 + **2019/12/10:** Webtrees 2.0.0
 + **2020/01/06:** Webtrees 2.0.1
 + **2020/01/13:** Webtrees 2.0.1 - Added possibility to use image without https (only http) for local networks
++ **2020/01/16:** Webtrees 2.0.1 - Added multi arch support
