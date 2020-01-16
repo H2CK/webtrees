@@ -11,13 +11,12 @@ env:
     - DOCKER_FILE=Dockerfile.travis
 
   jobs:
-    - QEMU_ARCH=x86_64  ARCH=amd64   S6_ARCH=amd64
-    - QEMU_ARCH=arm     ARCH=arm32v7 S6_ARCH=armhf
-    - QEMU_ARCH=aarch64 ARCH=arm64v8 S6_ARCH=aarch64
-    - QEMU_ARCH=i386    ARCH=i386    S6_ARCH=i386
-
-#- QEMU_ARCH=ppc64le ARCH=ppc64le S6_ARCH=ppc64le
-#- QEMU_ARCH=s390x   ARCH=s390x   S6_ARCH=s390x
+    - QEMU_ARCH=x86_64  ARCH=amd64
+    - QEMU_ARCH=arm     ARCH=arm32v7
+    - QEMU_ARCH=aarch64 ARCH=arm64v8
+    - QEMU_ARCH=i386    ARCH=i386
+    - QEMU_ARCH=ppc64le ARCH=ppc64le
+    - QEMU_ARCH=s390x   ARCH=s390x
 
 before_install:
   - chmod 775 docker.sh
