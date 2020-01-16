@@ -78,7 +78,7 @@ jobs:
               # The push order is displayed in reverse order on Docker Hub
 
               # Docker Login
-              - echo "${DOCKER_PASSWORD}" | docker login -u "{$DOCKER_USERNAME}" --password-stdin
+              - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
               # Create and push manifest list `version` for default
               - ./docker.sh manifest-list-version "" "default"
