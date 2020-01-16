@@ -1,8 +1,8 @@
 ARG ARCH=amd64
-ARG WT_VERSION=2.0.1
 
 FROM ${ARCH}/ubuntu:bionic
 
+ARG WT_VERSION=2.0.1
 ARG QEMU_ARCH
 
 # Set correct environment variables
