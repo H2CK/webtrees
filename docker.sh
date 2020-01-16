@@ -128,19 +128,19 @@ function docker_manifest_list_test_beta_latest() {
 
   echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${TAG_PREFIX}."
 
-  docker manifest create ${TARGET}:${TAG_PREFIX}${NODE_VERSION}${TAG_SUFFIX} \
-    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-amd64 \
-    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-i386 \
-    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm32v7 \
-    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm64v8 \
-    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-ppc64le \
-    ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-s390x
+  docker manifest create ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION} \
+    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-amd64 \
+    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-i386 \
+    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-arm32v7 \
+    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-arm64v8 \
+    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-ppc64le \
+    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-s390x
 
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-i386 --os=linux --arch=i386
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-arm64v8 --os=linux --arch=arm64 --variant=v8
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-ppc64le --os=linux --arch=ppc64le
-  docker manifest annotate ${TARGET}:${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${BUILD_VERSION}-${WT_VERSION}-s390x --os=linux --arch=s390x
+  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-i386 --os=linux --arch=i386
+  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
+  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-arm64v8 --os=linux --arch=arm64 --variant=v8
+  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-ppc64le --os=linux --arch=ppc64le
+  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-${WT_VERSION}-s390x --os=linux --arch=s390x
 
   docker manifest push ${TARGET}:${TAG_PREFIX}
   
