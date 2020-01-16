@@ -2,5 +2,8 @@
 .gitignore
 .github
 .gitattributes
+.travis.yml
+Dockerfile.travis
+docker.sh
 READMETEMPLATE.md
 README.md
