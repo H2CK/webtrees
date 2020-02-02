@@ -114,26 +114,6 @@ function docker_manifest_list_version() {
   docker manifest push ${TARGET}:${BUILD_VERSION}
   
   docker run --rm mplatform/mquery ${TARGET}:${BUILD_VERSION}
-  
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:latest."
-
-  docker manifest create ${TARGET}:latest \
-    ${TARGET}:${BUILD_VERSION}-amd64 \
-    ${TARGET}:${BUILD_VERSION}-i386 \
-    ${TARGET}:${BUILD_VERSION}-arm32v7 \
-    ${TARGET}:${BUILD_VERSION}-arm64v8 \
-    ${TARGET}:${BUILD_VERSION}-ppc64le \
-    ${TARGET}:${BUILD_VERSION}-s390x
-
-  docker manifest annotate ${TARGET}:latest ${TARGET}:${BUILD_VERSION}-i386 --os=linux --arch=386
-  docker manifest annotate ${TARGET}:latest ${TARGET}:${BUILD_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
-  docker manifest annotate ${TARGET}:latest ${TARGET}:${BUILD_VERSION}-arm64v8 --os=linux --arch=arm64 --variant=v8
-  docker manifest annotate ${TARGET}:latest ${TARGET}:${BUILD_VERSION}-ppc64le --os=linux --arch=ppc64le
-  docker manifest annotate ${TARGET}:latest ${TARGET}:${BUILD_VERSION}-s390x --os=linux --arch=s390x
-  
-  docker manifest push ${TARGET}:latest
-  
-  docker run --rm mplatform/mquery ${TARGET}:latest
 }
 
 function docker_manifest_list_test_beta_latest() {
@@ -148,7 +128,7 @@ function docker_manifest_list_test_beta_latest() {
 
   echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${TAG_PREFIX}."
 
-  docker manifest create ${TARGET}:${TAG_PREFIX}${BUILD_VERSION} \
+  docker manifest create ${TARGET}:${TAG_PREFIX} \
     ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-amd64 \
     ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-i386 \
     ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-arm32v7 \
@@ -156,11 +136,11 @@ function docker_manifest_list_test_beta_latest() {
     ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-ppc64le \
     ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-s390x
 
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-i386 --os=linux --arch=386
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-arm64v8 --os=linux --arch=arm64 --variant=v8
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-ppc64le --os=linux --arch=ppc64le
-  docker manifest annotate ${TARGET}:${TAG_PREFIX}${BUILD_VERSION} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-s390x --os=linux --arch=s390x
+  docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-i386 --os=linux --arch=386
+  docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
+  docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-arm64v8 --os=linux --arch=arm64 --variant=v8
+  docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-ppc64le --os=linux --arch=ppc64le
+  docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-s390x --os=linux --arch=s390x
 
   docker manifest push ${TARGET}:${TAG_PREFIX}
   
