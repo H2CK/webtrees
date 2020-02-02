@@ -129,12 +129,12 @@ function docker_manifest_list_test_beta_latest() {
   echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${TAG_PREFIX}."
 
   docker manifest create ${TARGET}:${TAG_PREFIX} \
-    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-amd64 \
-    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-i386 \
-    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-arm32v7 \
-    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-arm64v8 \
-    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-ppc64le \
-    ${TARGET}:${TAG_PREFIX}${BUILD_VERSION}-s390x
+    ${TARGET}:${BUILD_VERSION}-amd64 \
+    ${TARGET}:${BUILD_VERSION}-i386 \
+    ${TARGET}:${BUILD_VERSION}-arm32v7 \
+    ${TARGET}:${BUILD_VERSION}-arm64v8 \
+    ${TARGET}:${BUILD_VERSION}-ppc64le \
+    ${TARGET}:${BUILD_VERSION}-s390x
 
   docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${BUILD_VERSION}-i386 --os=linux --arch=386
   docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${BUILD_VERSION}-arm32v7 --os=linux --arch=arm --variant=v7
