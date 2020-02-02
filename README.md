@@ -72,3 +72,4 @@ It is possible to use additional 3rd party modules of webtrees with this contain
 + **2020/01/06:** Webtrees 2.0.1
 + **2020/01/13:** Webtrees 2.0.1 - Added possibility to use image without https (only http) for local networks
 + **2020/01/16:** Webtrees 2.0.1 - Added multi arch support
++ **2020/02/01:** Webtrees 2.0.2
