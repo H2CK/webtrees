@@ -1,0 +1,11 @@
+secretGenerator:
+- name: mysql-pass
+  literals:
+  - password=YOUR_PASSWORD
+- name: webtrees-admin-pass
+  literals:
+  - password=YOUR_WEBTREES_ADMIN_PASSWORD
+---
+resources:
+- mysql-deployment.yaml
+- wwebtrees-deployment.yaml

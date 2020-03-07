@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webtrees
+  labels:
+    app: webtrees
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: webtrees
+    tier: frontend
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wt-pv-claim
+  labels:
+    app: webtrees
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: webtrees
+  labels:
+    app: webtrees
+spec:
+  selector:
+    matchLabels:
+      app: webtrees
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: webtrees
+        tier: frontend
+    spec:
+      containers:
+      - image: dtjs48jkt/webtrees
+        name: webtrees
+        env:
+        - name: DISABLE_SSL
+          value: true
+        - name: PORT
+          value: 80
+        - name: DB_HOST
+          value: webtrees-mysql
+        - name: WT_ADMINPW
+          valueFrom:
+            secretKeyRef:
+              name: webtrees-admin-pass
+              key: password
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 80
+          name: webtrees
+        volumeMounts:
+        - name: webtrees-persistent-storage
+          mountPath: /var/www/html/data
+          subPath: data
+        - name: webtrees-persistent-storage
+          mountPath: /var/www/html/media
+          subPath: media
+      volumes:
+      - name: webtrees-persistent-storage
+        persistentVolumeClaim:
+          claimName: wt-pv-claim
