@@ -101,4 +101,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2020/01/13:** Webtrees 2.0.1 - Added possibility to use image without https (only http) for local networks
 * **2020/01/16:** Webtrees 2.0.1 - Added multi arch support
 * **2020/02/01:** Webtrees 2.0.2
-* **2020/03/06docker run --rm -it -p 443:443/tcp -e DB_HOST=192.168.1.147 -e DB_PASSWORD=wt-test -e DB_USER=wt-test -e WT_ADMINPW=admin1234 webtrees:test-2:** Webtrees 2.0.2 - Added support to automatically initialize db and webtrees. And use K8S template for deployment
+* **2020/03/06:** Webtrees 2.0.2 - Added support to automatically initialize db and webtrees. Provided K8S template for example deployment.
