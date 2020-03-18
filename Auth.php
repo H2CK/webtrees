@@ -261,6 +261,31 @@ class Auth
 
         return $family;
     }
+	
+     /**
+      * @param Header|null $header
+      * @param bool        $edit
+      *
+      * @return Header
+      * @throws RecordNotFoundException
+      * @throws RecordAccessDeniedException
+      */
+     public static function checkHeaderAccess(?Header $header, bool $edit = false): Header
+     {
+         if ($header === null) {
+             throw new RecordNotFoundException();
+         }
+
+         if ($edit && $header->canEdit()) {
+             return $header;
+         }
+
+         if ($header->canShow()) {
+             return $header;
+         }
+
+         throw new RecordAccessDeniedException();
+     }
 
     /**
      * @param Individual|null $individual
@@ -436,4 +461,29 @@ class Auth
 
         return $submitter;
     }
+	
+     /*
+      * @param Submission|null $submission
+      * @param bool            $edit
+      *
+      * @return Submission
+      * @throws RecordNotFoundException
+      * @throws RecordAccessDeniedException
+      */
+     public static function checkSubmissionAccess(?Submission $submission, bool $edit = false): Submission
+     {
+         if ($submission === null) {
+             throw new RecordNotFoundException();
+         }
+
+         if ($edit && $submission->canEdit()) {
+             return $submission;
+         }
+
+         if ($submission->canShow()) {
+             return $submission;
+         }
+
+         throw new RecordAccessDeniedException();
+     }
 }
