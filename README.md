@@ -104,3 +104,5 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2020/03/06:** Webtrees 2.0.2 - Added support to automatically initialize db and webtrees. Provided K8S template for example deployment.
 * **2020/03/18:** Webtrees 2.0.3 - Update to Webtrees 2.0.3
 * **2020/05/18:** Webtrees 2.0.4 - Update to Webtrees 2.0.4
+* **2020/05/18:** Webtrees 1.7.17 - Update to Webtrees 1.7.17
+* **2020/06/04:** Webtrees 2.0.5 - Update to Webtrees 2.0.5
