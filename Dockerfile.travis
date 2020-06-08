@@ -43,6 +43,8 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     php \
     libapache2-mod-php \
     php-mysql \
+    php-pgsql \
+    php-pdo-odbc \
     php-curl \
     php-gd \
     php-intl \
@@ -63,6 +65,7 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     php-zip \
     wget \
     unzip \
+    sed \
     && a2enmod ssl \
     && a2enmod rewrite \
     && a2enmod headers \
