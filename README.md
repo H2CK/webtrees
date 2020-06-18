@@ -108,3 +108,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2020/06/04:** Webtrees 2.0.5 - Update to Webtrees 2.0.5
 * **2020/06/08:** Webtrees 2.0.5 - Fixed PGSQL support
 * **2020/06/14:** Webtrees 2.0.5 - Security Fix: Forbid access to data folder by apache
+* **2020/06/18:** Webtrees 2.0.6
