@@ -14,7 +14,7 @@ Supported architectures are: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
 ## Usage
 
 ```sh
-docker run -d -p 8088:8079 --name webtrees --link mysql:db -v /webtrees/data:/var/www/html/data -v /webtrees/media:/var/www/html/media  -e GROUP_ID=999 -e PORT=8079 --restart always dtjs48jkt/webtrees
+docker run -d -p 8088:8079 --name webtrees --link mysql:db -v /webtrees/data:/var/www/html/data -e GROUP_ID=999 -e PORT=8079 --restart always dtjs48jkt/webtrees
 ```
 
 After starting the docker container go to:
@@ -23,12 +23,12 @@ https://server or https://server:port if you have defined an alternative port
 
 ## Update Functionality
 
-This docker image is based on Ubuntu. On each start of the container an update of the used Ubuntu packages could be performed. Due to the running update it might take a little longer until the application webtrees is available. This auto-update functionality has (now) to be activated explicitely (-e UPDATE_ON_START=TRUE).
+This docker image is based on Ubuntu. On each start of the container an update of the used Ubuntu packages could be performed. Due to the running update it might take a little longer until the application webtrees is available. This auto-update functionality has (now) to be activated explicitly (-e UPDATE_ON_START=TRUE).
 
 ## Persistent storage of data
 
-Configuration and media files should be stored outside the container. Therefor you should create two directories that are mapped to the container internal directories /var/www/html/data and /var/www/html/media.
-In the container apache is running under user www-data [33] (group www-data[33]). Both directories must therfore be read- and writable for this user. If this is not possible you can use the alternative and use the parameter GROUP_ID to inform the container about the group that has read and write access to those folders.
+Configuration and media files should be stored outside the container. Therefor you should create a directories that is mapped to the container internal directory /var/www/html/data.
+In the container apache is running under user www-data [33] (group www-data[33]). The directory must therfore be read- and writable for this user. If this is not possible you can use the alternative and use the parameter GROUP_ID to inform the container about the group that has read and write access to those folders.
 
 ## Database
 
@@ -54,12 +54,12 @@ If you want a more sofisticated encryption you should use a reverse proxy in fro
 It is possible to use the image without https support. For that you have to start the container with the following environament variables set.
 
 ```sh
-docker run -d -p 80:80 --name webtrees --link mysql:db -v /webtrees/data:/var/www/html/data -v /webtrees/media:/var/www/html/media  -e DISABLE_SSL=TRUE -e PORT=80 --restart always dtjs48jkt/webtrees
+docker run -d -p 80:80 --name webtrees --link mysql:db -v /webtrees/data:/var/www/html/data -e DISABLE_SSL=TRUE -e PORT=80 --restart always dtjs48jkt/webtrees
 ```
 
 ## Usage of additional 3rd party modules
 
-It is possible to use additional 3rd party modules of webtrees with this container. To use such modules it is necessary to mount those folders containing the module into the following location `-v /var/www/html/modulesv3/<modulexxx>`
+It is possible to use additional 3rd party modules of webtrees with this container. To use such modules it is necessary to mount those folders containing the module into the following location `-v /var/www/html/modules_v4/<modulexxx>`
 
 ## Automatic initialization of database
 
@@ -110,3 +110,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2020/06/14:** Webtrees 2.0.5 - Security Fix: Forbid access to data folder by apache
 * **2020/06/18:** Webtrees 2.0.6
 * **2020/07/27:** Webtrees 2.0.7
+* **2020/08/11:** Webtrees 2.0.7 - Fixed documentation, removed separate media folder from v1.x and updated module path for version v2.x.
