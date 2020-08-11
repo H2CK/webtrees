@@ -116,6 +116,6 @@ RUN chmod 644 /etc/apache2/sites-available/webtrees.conf \
     && a2enmod ssl \
     && a2ensite webtrees
 
-VOLUME /var/www/html/data /var/www/html/media
+VOLUME /var/www/html/data
 
 EXPOSE 443/tcp
