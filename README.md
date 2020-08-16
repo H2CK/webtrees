@@ -72,7 +72,6 @@ This image contains now the necessary libraries to optionally also select Postgr
 ## Parameters
 
 * `-v /var/www/html/data` - Where webtrees server stores its config files
-* `-v /var/www/html/media` - Where webtrees server stores its media files
 * `-v /etc/localtime` - Set to use the correct time of host
 * `-e GROUP_ID` - allow access to mapped volumes
 * `-e PORT` - change port web server listens on
