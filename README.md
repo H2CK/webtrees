@@ -110,3 +110,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2020/06/18:** Webtrees 2.0.6
 * **2020/07/27:** Webtrees 2.0.7
 * **2020/08/11:** Webtrees 2.0.7 - Fixed documentation, removed separate media folder from v1.x and updated module path for version v2.x.
+* **2020/10/04:** Webtrees 2.0.8
