@@ -78,7 +78,7 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     && wget https://github.com/fisharebest/webtrees/archive/${WT_VERSION}.zip -O /tmp/webtrees.zip \
     && unzip -d /tmp/ -o /tmp/webtrees.zip \
     && rm -Rf /var/www/html \
-    && mv /tmp/webtrees /var/www/html \
+    && mv /tmp/webtrees-${WT_VERSION} /var/www/html \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 770 /var/www/html \
     && apt-get clean -y \
