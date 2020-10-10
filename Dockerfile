@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND="noninteractive" HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.U
 ENV supervisor_conf /etc/supervisor/supervisord.conf
 ENV security_conf /etc/apache2/conf-available/security.conf
 ENV start_scripts_path /bin
-ENV WT_VERSION="2.0.8"
+ENV WT_VERSION="2.0.9"
 
 # Update packages from baseimage
 RUN apt-get update -qq
