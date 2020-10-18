@@ -112,3 +112,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2020/08/11:** Webtrees 2.0.7 - Fixed documentation, removed separate media folder from v1.x and updated module path for version v2.x.
 * **2020/10/04:** Webtrees 2.0.8
 * **2020/10/10:** Webtrees 2.0.9
+* **2020/10/18:** Webtrees 2.0.9 - Fixed auto setup of MySQL/MariaDB. (Added missing files - Issue #25)
