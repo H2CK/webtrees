@@ -1,6 +1,6 @@
 ARG ARCH=amd64
 
-FROM ${ARCH}/ubuntu:bionic
+FROM ${ARCH}/ubuntu:20.04
 
 ARG WT_VERSION=2.0.10
 ARG QEMU_ARCH
@@ -53,13 +53,11 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     php-imap \
     php-memcache \
     php-pspell \
-    php-recode \
     php-sqlite3 \
     php-tidy \
     php-xmlrpc \
     php-xsl \
     php-mbstring \
-    php-gettext \
     php-opcache \
     php-apcu \
     php-zip \

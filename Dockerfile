@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:20.04
 
 # Set correct environment variables
 ENV DEBIAN_FRONTEND="noninteractive" HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8"
@@ -33,13 +33,11 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     php-imap \
     php-memcache \
     php-pspell \
-    php-recode \
     php-sqlite3 \
     php-tidy \
     php-xmlrpc \
     php-xsl \
     php-mbstring \
-    php-gettext \
     php-opcache \
     php-apcu \
     php-zip \
