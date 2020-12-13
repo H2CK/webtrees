@@ -56,6 +56,7 @@ CREATE TABLE `wt_change` (
 
 DROP TABLE IF EXISTS `wt_dates`;
 CREATE TABLE `wt_dates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `d_day` tinyint(4) NOT NULL,
   `d_month` char(5) COLLATE utf8_unicode_ci DEFAULT NULL,
   `d_mon` tinyint(4) NOT NULL,
@@ -66,6 +67,7 @@ CREATE TABLE `wt_dates` (
   `d_gid` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `d_file` int(11) NOT NULL,
   `d_type` enum('@#DGREGORIAN@','@#DJULIAN@','@#DHEBREW@','@#DFRENCH R@','@#DHIJRI@','@#DROMAN@','@#DJALALI@') COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `wt_dates_d_day_index` (`d_day`),
   KEY `wt_dates_d_month_index` (`d_month`),
   KEY `wt_dates_d_mon_index` (`d_mon`),
