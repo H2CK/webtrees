@@ -71,9 +71,10 @@ spec:
         - name: webtrees-persistent-storage
           mountPath: /var/www/html/data
           subPath: data
-        - name: webtrees-persistent-storage
-          mountPath: /var/www/html/media
-          subPath: media
+# Uncomment below items if you are still using webtree 1.x
+#        - name: webtrees-persistent-storage
+#          mountPath: /var/www/html/media
+#          subPath: media
       volumes:
       - name: webtrees-persistent-storage
         persistentVolumeClaim:
