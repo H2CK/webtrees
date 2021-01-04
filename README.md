@@ -61,6 +61,19 @@ docker run -d -p 80:80 --name webtrees --link mysql:db -v /webtrees/data:/var/ww
 
 It is possible to use additional 3rd party modules of webtrees with this container. To use such modules it is necessary to mount those folders containing the module into the following location `-v /var/www/html/modules_v4/<modulexxx>`
 
+## Using Pretty URLs
+
+It is possible to use pretty urls with this image. You can set in the config.ini.php file the following attributes:
+
+```none
+redirect_urls="1"
+base_url="http://localhost"
+```
+
+When using pretty urls it is necessary to set also the base_url. Otherwise you will end up with an error "Too many redirects".
+
+It is also possible to active pretty urls by using environment variables. You could set `-e PRETTYURLS=TRUE` and `-e BASE_URL=http://localhost`. This will set the necessary settings in the config.ini.php.
+
 ## Automatic initialization of database
 
 For MySQL or MariaDB it is possible to use an automatical initalization of the database within the application. User the parameters to DB_* and WT_* to set the corresponding values. To possible error of the initialization start the container in interactve mode using -it.
@@ -86,6 +99,8 @@ This image contains now the necessary libraries to optionally also select Postgr
 * `-e WT_ADMIN` - can only be used at first instantiation to set the initial webtrees admin user account name. Password (DB_PASSWORD) must also be set (see above), otherwise no initial setup is performed. If not present (only DB_PASSWORD is present) the default will be admin.
 * `-e WT_ADMINPW` - can only be used at first instantiation to set the initial webtrees admin user account password. Password (DB_PASSWORD) must also be set (see above), otherwise no initial setup is performed. If not present (only DB_PASSWORD is present) the default will be admin123.
 * `-e WT_ADMINMAIL` - can only be used at first instantiation to set the initial webtrees admin user account mail address. Password (DB_PASSWORD) must also be set (see above), otherwise no initial setup is performed. If not present (only DB_PASSWORD is present) the default will be noreply@webtrees.net.
+`-e PRETTYURLS` - set to TRUE to allow usage of pretty urls.
+`-e BASE_URL` - set to the correct url to allow usage of pretty urls.
 
 ## Versions
 
@@ -114,3 +129,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2020/10/10:** Webtrees 2.0.9
 * **2020/10/18:** Webtrees 2.0.9 - Fixed auto setup of MySQL/MariaDB. (Added missing files - Issue #25)
 * **2020/10/24:** Webtrees 2.0.10
+* **2021/01/04:** Webtrees 2.0.11 - Added support for pretty urls
