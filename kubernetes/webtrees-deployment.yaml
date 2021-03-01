@@ -73,8 +73,6 @@ spec:
 #        - name: webtrees-persistent-storage
 #          mountPath: /var/www/html/media
 #          subPath: media
-      nodeSelector:
-        kubernetes.io/arch: amd64
       volumes:
       - name: webtrees-persistent-storage
         persistentVolumeClaim:
