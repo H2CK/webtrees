@@ -1,11 +1,15 @@
-secretGenerator:
-- name: mysql-pass
-  literals:
-  - password=YOUR_PASSWORD
-- name: webtrees-admin-pass
-  literals:
-  - password=YOUR_WEBTREES_ADMIN_PASSWORD
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-pass
+type: Opaque
+data:
+  password: YOUR_PASSWORD
 ---
-resources:
-- mysql-deployment.yaml
-- wwebtrees-deployment.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: webtrees-admin-pass
+type: Opaque
+data:
+  password: YOUR_WEBTREES_ADMIN_PASSWORD

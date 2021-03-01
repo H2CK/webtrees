@@ -35,25 +35,23 @@ spec:
   selector:
     matchLabels:
       app: webtrees
-      tier: frontend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: webtrees
-        tier: frontend
     spec:
       containers:
       - image: dtjs48jkt/webtrees
         name: webtrees
         env:
         - name: DISABLE_SSL
-          value: true
+          value: "true"
         - name: PORT
-          value: 80
+          value: "80"
         - name: DB_HOST
-          value: webtrees-mysql
+          value: "webtrees-mysql"
         - name: WT_ADMINPW
           valueFrom:
             secretKeyRef:
@@ -75,6 +73,8 @@ spec:
 #        - name: webtrees-persistent-storage
 #          mountPath: /var/www/html/media
 #          subPath: media
+      nodeSelector:
+        kubernetes.io/arch: amd64
       volumes:
       - name: webtrees-persistent-storage
         persistentVolumeClaim:
