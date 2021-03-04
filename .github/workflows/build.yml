@@ -41,22 +41,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: "Preparation" 
+      - name: Fetch Parameters
+        id: fetch_parameters
         run: |
-          echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-          echo "TARGET=dtjs48jkt/webtrees-dev" >> $GITHUB_ENV
+          echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+          echo ::set-output name=TARGET::dtjs48jkt/webtrees-dev
+      - name: Preparation 
+        id: prep
+        env:
+          BUILD_VERSION: ${{ steps.fetch_parameters.outputs.VERSION }}
+          TARGET: ${{ steps.fetch_parameters.outputs.VERSION }}
+        run: |
           if [[ ${{ env.BUILD_VERSION }} =~ ^v[0-9\.-]*$ ]]; then
-            echo "TARGET=dtjs48jkt/webtrees" >> $GITHUB_ENV
+            echo ::set-output name=TARGET::dtjs48jkt/webtrees
           fi
           echo "BUILD_VERSION: $BUILD_VERSION"
-          echo  BUILD_VERSION: ${{ env.BUILD_VERSION }}
-          echo  COMMIT_SHA: ${{ env.COMMIT_SHA }}
+          echo BUILD_VERSION: ${{ env.BUILD_VERSION }}
+          echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
+          echo TARGET: ${{ steps.prep.outputs.TARGET }}
           chmod 775 docker.sh
           ./docker.sh prepare
       - name: "Build Docker Image"
         env:
           ARCH: ${{ matrix.arch }}
           QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.fetch_parameters.outputs.VERSION }}
+          TARGET: ${{ steps.fetch_parameters.outputs.VERSION }}
         run: ./docker.sh build
       - name: "Test Docker Image"
         run: ./docker.sh test
