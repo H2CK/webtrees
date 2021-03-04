@@ -48,19 +48,21 @@ jobs:
           echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
           echo ::set-output name=TARGET::dtjs48jkt/webtrees-dev
+          echo ::set-output name=BUILD_VERSION::${{ env.COMMIT_SHA::8 }}
+          if [[ ${{ steps.fetch_parameters.outputs.SOURCE_TAG }} =~ ^v[0-9\.-]*$ ]]; then
+            echo ::set-output name=TARGET::dtjs48jkt/webtrees
+            echo ::set-output name=BUILD_VERSION::${{ steps.fetch_parameters.outputs.SOURCE_TAG }}
+          fi
       - name: Preparation 
         id: prep
         env:
-          BUILD_VERSION: ${{ steps.fetch_parameters.outputs.SOURCE_TAG }}
+          BUILD_VERSION: ${{ steps.fetch_parameters.outputs.BUILD_VERSION }}
           TARGET: ${{ steps.fetch_parameters.outputs.TARGET }}
         run: |
-          if [[ ${{ env.BUILD_VERSION }} =~ ^v[0-9\.-]*$ ]]; then
-            echo ::set-output name=TARGET::dtjs48jkt/webtrees
-          fi
           echo "BUILD_VERSION: $BUILD_VERSION"
           echo BUILD_VERSION: ${{ env.BUILD_VERSION }}
           echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
-          echo TARGET: ${{ steps.prep.outputs.TARGET }}
+          echo TARGET: ${{ steps.fetch_parameters.outputs.TARGET }}
           chmod 775 docker.sh
           ./docker.sh prepare
       - name: "Build Docker Image"
