@@ -1,0 +1,69 @@
+name: "Build Webtrees"
+
+on:
+  push:
+    branches:
+      - "*"
+#      - master
+#    tags:
+#      - v*
+  pull_request:
+    branches:
+    - master
+#  schedule:
+#    -cron: '0 0 * * 0' # weekly
+  workflow_dispatch:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    env:
+      QEMU_VERSION: "v5.1.0-7"
+      WT_VERSION: "2.0.11"
+      DOCKER_FILE: Dockerfile.github
+      COMMIT_SHA: ${{ github.sha }}
+
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+       include:
+        - arch: "amd64"
+          qemu-arch: "x86_64"
+        - arch: "arm32v7"
+          qemu-arch: "arm"
+        - arch: "arm64v8"
+          qemu-arch: "aarch64"
+        - arch: "ppc64le"
+          qemu-arch: "ppc64le"
+        - arch: "s390x"
+          qemu-arch: "s390x"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Preparation" 
+        run: |
+          echo "BUILD_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo "TARGET=dtjs48jkt/webtrees-dev" >> $GITHUB_ENV
+          if [[ ${{ env.BUILD_VERSION }} =~ ^v[0-9\.-]*$ ]]; then
+            echo "TARGET=dtjs48jkt/webtrees" >> $GITHUB_ENV
+          fi
+          echo "BUILD_VERSION: $BUILD_VERSION"
+          echo  BUILD_VERSION: ${{ env.BUILD_VERSION }}
+          echo  COMMIT_SHA: ${{ env.COMMIT_SHA }}
+          chmod 775 docker.sh
+          ./docker.sh prepare
+      - name: "Build Docker Image"
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+        run: ./docker.sh build
+      - name: "Test Docker Image"
+        run: ./docker.sh test
+#      - name: "Push Docker Image"
+#        run: ./docker.sh tag && echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && ./docker.sh push && docker logout
+#        if: env.str == 'ABC' && env.num == 123 # only when tag is set
+
+#  manifest:
+#    needs: build
+#    runs-on: ubuntu-latest

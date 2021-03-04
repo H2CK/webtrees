@@ -42,7 +42,7 @@ function docker_prepare() {
   # Update docker configuration to enable docker manifest command
   update_docker_configuration
 
-  # Prepare qemu to build images other then x86_64 on travis
+  # Prepare qemu to build images other then x86_64
   prepare_qemu
 }
 
@@ -59,7 +59,7 @@ function docker_build() {
     --build-arg ARCH=${ARCH} \
     --build-arg BUILD_DATE=$(date +"%Y-%m-%dT%H:%M:%SZ") \
     --build-arg BUILD_VERSION=${BUILD_VERSION} \
-    --build-arg BUILD_REF=${TRAVIS_COMMIT} \
+    --build-arg BUILD_REF=${COMMIT_SHA} \
     --build-arg WT_VERSION=${WT_VERSION} \
     --build-arg QEMU_ARCH=${QEMU_ARCH} \
     --file ./${DOCKER_FILE} \
