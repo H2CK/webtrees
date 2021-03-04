@@ -44,13 +44,15 @@ jobs:
       - name: Fetch Parameters
         id: fetch_parameters
         run: |
-          echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
           echo ::set-output name=TARGET::dtjs48jkt/webtrees-dev
       - name: Preparation 
         id: prep
         env:
-          BUILD_VERSION: ${{ steps.fetch_parameters.outputs.VERSION }}
-          TARGET: ${{ steps.fetch_parameters.outputs.VERSION }}
+          BUILD_VERSION: ${{ steps.fetch_parameters.outputs.SOURCE_TAG }}
+          TARGET: ${{ steps.fetch_parameters.outputs.TARGET }}
         run: |
           if [[ ${{ env.BUILD_VERSION }} =~ ^v[0-9\.-]*$ ]]; then
             echo ::set-output name=TARGET::dtjs48jkt/webtrees
