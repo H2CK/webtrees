@@ -48,10 +48,10 @@ jobs:
           echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
           echo ::set-output name=TARGET::dtjs48jkt/webtrees-dev
-          echo "::set-output name=BUILD_VERSION::$(echo ${COMMIT_SHA} | cut -c1-8)"
-          if [[ ${{ steps.fetch_parameters.outputs.SOURCE_TAG }} =~ ^v[0-9\.-]*$ ]]; then
+          echo "::set-output name=BUILD_VERSION::$(git rev-parse --short HEAD)"
+          if [[ ${{ steps.prep.outputs.SOURCE_TAG }} =~ ^v[0-9\.-]*$ ]]; then
             echo ::set-output name=TARGET::dtjs48jkt/webtrees
-            echo ::set-output name=BUILD_VERSION::${{ steps.fetch_parameters.outputs.SOURCE_TAG }}
+            echo ::set-output name=BUILD_VERSION::${{ steps.prep.outputs.SOURCE_TAG }}
           fi
           chmod 775 docker.sh
           ./docker.sh prepare
