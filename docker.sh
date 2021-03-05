@@ -37,7 +37,7 @@ main() {
 
 function docker_prepare() {
   # Prepare the machine before any code installation scripts
-  setup_dependencies
+  #setup_dependencies
 
   # Update docker configuration to enable docker manifest command
   update_docker_configuration
