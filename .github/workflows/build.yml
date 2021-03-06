@@ -48,9 +48,9 @@ jobs:
           echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
           echo ::set-output name=TARGET::dtjs48jkt/webtrees-dev
-          echo "::set-output name=BUILD_VERSION::$(echo ${COMMIT_SHA} | cut -c1-8)"
-          echo "::set-output name=BUILD_VERSION::$(git rev-parse --short HEAD)"
-          echo "::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+          echo ::set-output name=BUILD_VERSION::${SHORT_SHA}
+          echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           if [[ "${{ steps.prep.outputs.SOURCE_TAG }}" =~ ^v[0-9\.-]*$ ]]; then
             echo ::set-output name=TARGET::dtjs48jkt/webtrees
             echo ::set-output name=BUILD_VERSION::${{ steps.prep.outputs.SOURCE_TAG }}
