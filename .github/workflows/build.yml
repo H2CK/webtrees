@@ -30,14 +30,14 @@ jobs:
        include:
         - arch: "amd64"
           qemu-arch: "x86_64"
-        - arch: "arm32v7"
-          qemu-arch: "arm"
-        - arch: "arm64v8"
-          qemu-arch: "aarch64"
-        - arch: "ppc64le"
-          qemu-arch: "ppc64le"
-        - arch: "s390x"
-          qemu-arch: "s390x"
+        # - arch: "arm32v7"
+        #   qemu-arch: "arm"
+        # - arch: "arm64v8"
+        #   qemu-arch: "aarch64"
+        # - arch: "ppc64le"
+        #   qemu-arch: "ppc64le"
+        # - arch: "s390x"
+        #   qemu-arch: "s390x"
 
     steps:
       - uses: actions/checkout@v2
@@ -48,7 +48,11 @@ jobs:
           echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
           echo ::set-output name=TARGET::dtjs48jkt/webtrees-dev
+          echo ${GITHUB_SHA}
+          echo ${{ env.COMMIT_SHA }}
+          echo ${{ github.sha }}
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+          echo "SHORT_SHA:" ${SHORT_TAG} 
           echo ::set-output name=BUILD_VERSION::${SHORT_SHA}
           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           if [[ "${{ steps.prep.outputs.SOURCE_TAG }}" =~ ^v[0-9\.-]*$ ]]; then
@@ -71,9 +75,9 @@ jobs:
           echo BUILD_REF: $BUILD_REF
           echo TARGET: ${{ env.TARGET }}
           echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
-          ./docker.sh build
-      - name: "Test Docker Image"
-        run: ./docker.sh test
+      #     ./docker.sh build
+      # - name: "Test Docker Image"
+      #   run: ./docker.sh test
 #      - name: "Push Docker Image"
 #        run: ./docker.sh tag && echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && ./docker.sh push && docker logout
 #        if: env.str == 'ABC' && env.num == 123 # only when tag is set
