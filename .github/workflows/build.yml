@@ -51,16 +51,18 @@ jobs:
           echo ${GITHUB_SHA}
           echo ${{ env.COMMIT_SHA }}
           echo ${{ github.sha }}
+          echo "`echo ${GITHUB_SHA} | cut -c1-8`"
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-          echo "SHORT_SHA:" ${SHORT_SHA} 
+          echo "SHORT_SHA: ${SHORT_SHA}" 
+          echo ${{ env.SHORT_SHA }}
           echo ::set-output name=BUILD_VERSION::${SHORT_SHA}
           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           if [[ "${{ steps.prep.outputs.SOURCE_TAG }}" =~ ^v[0-9\.-]*$ ]]; then
             echo ::set-output name=TARGET::dtjs48jkt/webtrees
             echo ::set-output name=BUILD_VERSION::${{ steps.prep.outputs.SOURCE_TAG }}
           fi
-          chmod 775 docker.sh
-          ./docker.sh prepare
+          # chmod 775 docker.sh
+          # ./docker.sh prepare
       - name: "Build Docker Image"
         env:
           ARCH: ${{ matrix.arch }}
