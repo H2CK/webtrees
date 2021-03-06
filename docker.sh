@@ -57,7 +57,7 @@ function docker_build() {
 
   docker build --no-cache \
     --build-arg ARCH=${ARCH} \
-    --build-arg BUILD_DATE=$(date +"%Y-%m-%dT%H:%M:%SZ") \
+    --build-arg BUILD_DATE=${BUILD_DATE} \
     --build-arg BUILD_VERSION=${BUILD_VERSION} \
     --build-arg BUILD_REF=${COMMIT_SHA} \
     --build-arg WT_VERSION=${WT_VERSION} \

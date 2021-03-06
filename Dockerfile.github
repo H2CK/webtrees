@@ -12,7 +12,7 @@ ENV security_conf /etc/apache2/conf-available/security.conf
 ENV start_scripts_path /bin
 
 LABEL org.label-schema.build-date=${BUILD_DATE} \
-    org.label-schema.docker.dockerfile="Dockerfile.travis" \
+    org.label-schema.docker.dockerfile="Dockerfile.github" \
     org.label-schema.name="Webtrees" \
     org.label-schema.version=${BUILD_VERSION} \
     org.label-schema.description="Docker Container for Webtrees." \

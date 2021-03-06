@@ -72,6 +72,13 @@ jobs:
           echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
           ./docker.sh build
       - name: "Test Docker Image"
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
+          BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
+          BUILD_REF: ${{ env.COMMIT_SHA }}
+          TARGET: ${{ steps.prep.outputs.TARGET }}
         run: ./docker.sh test
 #      - name: "Push Docker Image"
 #        run: ./docker.sh tag && echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && ./docker.sh push && docker logout
