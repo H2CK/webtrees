@@ -63,6 +63,7 @@ jobs:
           echo SOURCE_NAME: ${{ steps.prep.outputs.SOURCE_NAME }}
           echo SOURCE_BRANCH: ${{ steps.prep.outputs.SOURCE_BRANCH }}
           echo SOURCE_TAG: ${{ steps.prep.outputs.SOURCE_TAG }}
+          echo SOURCE_TAG: ${GITHUB_REF#refs/tags/}
           if [[ "${{ steps.prep.outputs.SOURCE_TAG }}" =~ ^v[0-9\.-]*$ ]]; then
             echo ::set-output name=TARGET::dtjs48jkt/webtrees
           fi
