@@ -16,13 +16,21 @@ on:
     branches:
       - "*"
 
+env:
+  QEMU_VERSION: "v5.1.0-7"
+  WT_VERSION: "2.0.11"
+  DOCKER_FILE: Dockerfile.github
+  COMMIT_SHA: ${{ github.sha }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+
 jobs:
   build:
-    env:
-      QEMU_VERSION: "v5.1.0-7"
-      WT_VERSION: "2.0.11"
-      DOCKER_FILE: Dockerfile.github
-      COMMIT_SHA: ${{ github.sha }}
+    # env:
+    #   QEMU_VERSION: "v5.1.0-7"
+    #   WT_VERSION: "2.0.11"
+    #   DOCKER_FILE: Dockerfile.github
+    #   COMMIT_SHA: ${{ github.sha }}
 
     runs-on: ubuntu-20.04
     strategy:
@@ -80,10 +88,61 @@ jobs:
           BUILD_REF: ${{ env.COMMIT_SHA }}
           TARGET: ${{ steps.prep.outputs.TARGET }}
         run: ./docker.sh test
-#      - name: "Push Docker Image"
-#        run: ./docker.sh tag && echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && ./docker.sh push && docker logout
-#        if: env.str == 'ABC' && env.num == 123 # only when tag is set
+      - name: "Push Docker Image"
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
+          BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
+          BUILD_REF: ${{ env.COMMIT_SHA }}
+          TARGET: ${{ steps.prep.outputs.TARGET }}
+        run: |
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*$ ]]; then
+            ./docker.sh tag
+            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+            ./docker.sh push
+            docker logout
+          fi
 
-#  manifest:
-#    needs: build
-#    runs-on: ubuntu-latest
+  manifest:
+    needs: build
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Preparation 
+        id: prep
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+          echo ::set-output name=TARGET::dtjs48jkt/webtrees-dev
+          echo ::set-output name=BUILD_VERSION::$(echo ${GITHUB_SHA} | cut -c1-8)
+          echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          if [[ "${{ steps.prep.outputs.SOURCE_TAG }}" =~ ^v[0-9\.-]*$ ]]; then
+            echo ::set-output name=TARGET::dtjs48jkt/webtrees
+            echo ::set-output name=BUILD_VERSION::${{ steps.prep.outputs.SOURCE_TAG }}
+          fi
+          chmod 775 docker.sh
+          ./docker.sh prepare
+      - name: "Create and push manifest"
+        id: manifest
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
+          BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
+          BUILD_REF: ${{ env.COMMIT_SHA }}
+          TARGET: ${{ steps.prep.outputs.TARGET }}
+        run: |
+          echo "BUILD_VERSION: $BUILD_VERSION"
+          echo BUILD_DATE: $BUILD_DATE
+          echo BUILD_REF: $BUILD_REF
+          echo TARGET: ${{ env.TARGET }}
+          echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*$ ]]; then
+            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+            ./docker.sh manifest-list-version "" "default"
+            ./docker.sh manifest-list-test-beta-latest "" "default"
+            docker logout
+          fi
