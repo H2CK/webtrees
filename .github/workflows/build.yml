@@ -26,7 +26,6 @@ on:
 
 env:
   QEMU_VERSION: "v5.1.0-7"
-#  WT_VERSION: "2.0.11"
   DOCKER_FILE: Dockerfile.github
   COMMIT_SHA: ${{ github.sha }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USER }}
@@ -40,14 +39,14 @@ jobs:
        include:
         - arch: "amd64"
           qemu-arch: "x86_64"
-        # - arch: "arm32v7"
-        #   qemu-arch: "arm"
-        # - arch: "arm64v8"
-        #   qemu-arch: "aarch64"
-        # - arch: "ppc64le"
-        #   qemu-arch: "ppc64le"
-        # - arch: "s390x"
-        #   qemu-arch: "s390x"
+        - arch: "arm32v7"
+          qemu-arch: "arm"
+        - arch: "arm64v8"
+          qemu-arch: "aarch64"
+        - arch: "ppc64le"
+          qemu-arch: "ppc64le"
+        - arch: "s390x"
+          qemu-arch: "s390x"
 
     steps:
       - uses: actions/checkout@v2
@@ -106,7 +105,7 @@ jobs:
           TARGET: ${{ steps.prep.outputs.TARGET }}
           WT_VERSION: ${{ steps.prep.outputs.WT_VERSION }}
         run: |
-          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*$ ]]; then
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]*$ ]]; then
             ./docker.sh tag
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             ./docker.sh push
@@ -152,9 +151,12 @@ jobs:
           echo TARGET: ${{ env.TARGET }}
           echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
           echo WT_VERSION: $WT_VERSION
-          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*$ ]]; then
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]*$ ]]; then
+            echo Writing Manifest.
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             ./docker.sh manifest-list-version "" "default"
             ./docker.sh manifest-list-test-beta-latest "" "default"
             docker logout
+          else
+            echo Skipped writing Manifest.
           fi
