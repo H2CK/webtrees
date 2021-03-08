@@ -108,8 +108,6 @@ function docker_manifest_list_version() {
   docker manifest annotate ${TARGET}:${BUILD_VERSION} ${TARGET}:${BUILD_VERSION}-s390x --os=linux --arch=s390x
   
   docker manifest push ${TARGET}:${BUILD_VERSION}
-  
-  #docker run --rm mplatform/mquery ${TARGET}:${BUILD_VERSION}
 }
 
 function docker_manifest_list_test_beta_latest() {
@@ -137,8 +135,6 @@ function docker_manifest_list_test_beta_latest() {
   docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${BUILD_VERSION}-s390x --os=linux --arch=s390x
 
   docker manifest push ${TARGET}:${TAG_PREFIX}
-  
-  #docker run --rm mplatform/mquery ${TARGET}:${TAG_PREFIX}
 }
 
 function setup_dependencies() {
