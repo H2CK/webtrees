@@ -4,8 +4,6 @@ set -o errexit
 
 main() {
   # arg 1 holds switch string
-  # arg 2 holds node version
-  # arg 3 holds tag suffix
 
   case $1 in
   "prepare")
@@ -24,10 +22,10 @@ main() {
     docker_push
     ;;
   "manifest-list-version")
-    docker_manifest_list_version "$2" "$3"
+    docker_manifest_list_version
     ;;
   "manifest-list-test-beta-latest")
-    docker_manifest_list_test_beta_latest "$2" "$3"
+    docker_manifest_list_test_beta_latest
     ;;
   *)
     echo "none of above!"
@@ -42,7 +40,7 @@ function docker_prepare() {
   # Update docker configuration to enable docker manifest command
   update_docker_configuration
 
-  # Prepare qemu to build images other then x86_64 on travis
+  # Prepare qemu to build images other then x86_64
   prepare_qemu
 }
 
@@ -57,9 +55,9 @@ function docker_build() {
 
   docker build --no-cache \
     --build-arg ARCH=${ARCH} \
-    --build-arg BUILD_DATE=$(date +"%Y-%m-%dT%H:%M:%SZ") \
+    --build-arg BUILD_DATE=${BUILD_DATE} \
     --build-arg BUILD_VERSION=${BUILD_VERSION} \
-    --build-arg BUILD_REF=${TRAVIS_COMMIT} \
+    --build-arg BUILD_REF=${COMMIT_SHA} \
     --build-arg WT_VERSION=${WT_VERSION} \
     --build-arg QEMU_ARCH=${QEMU_ARCH} \
     --file ./${DOCKER_FILE} \
@@ -110,8 +108,6 @@ function docker_manifest_list_version() {
   docker manifest annotate ${TARGET}:${BUILD_VERSION} ${TARGET}:${BUILD_VERSION}-s390x --os=linux --arch=s390x
   
   docker manifest push ${TARGET}:${BUILD_VERSION}
-  
-  docker run --rm mplatform/mquery ${TARGET}:${BUILD_VERSION}
 }
 
 function docker_manifest_list_test_beta_latest() {
@@ -139,20 +135,29 @@ function docker_manifest_list_test_beta_latest() {
   docker manifest annotate ${TARGET}:${TAG_PREFIX} ${TARGET}:${BUILD_VERSION}-s390x --os=linux --arch=s390x
 
   docker manifest push ${TARGET}:${TAG_PREFIX}
-  
-  docker run --rm mplatform/mquery ${TARGET}:${TAG_PREFIX}
 }
 
 function setup_dependencies() {
   echo "PREPARE: Setting up dependencies."
-  sudo apt update -y
-  sudo apt install --only-upgrade docker-ce -y
+  sudo apt-get remove docker docker-engine docker.io containerd runc
+  sudo apt-get update -y
+  sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg -y
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update -y
+  sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 }
 
 function update_docker_configuration() {
   echo "PREPARE: Updating docker configuration"
 
-  mkdir $HOME/.docker
+  #mkdir $HOME/.docker
 
   # enable experimental to use docker manifest command
   echo '{
@@ -184,4 +189,4 @@ function prepare_qemu() {
     popd
 }
 
-main "$1" "$2" "$3"
+main "$1"

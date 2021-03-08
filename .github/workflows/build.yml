@@ -1,0 +1,168 @@
+# Build Pipeline for Webtrees
+# Behaviour:
+# Any commit leads to building the docker container and testing the container
+# Handling of tags:
+# - v1.2.3-1      -> tagged as dtjs48jkt/webtrees:v1.2.3-1, pushed to docker hub, manifest created with latest
+# - v1.2.3-1-test -> (contains test) tagged as dtjs48jkt/webtrees-dev:v1.2.3-1-test, pushed to docker hub, manifest created with test
+# - v1.2.3-1-beta -> (contains beta) tagged as dtjs48jkt/webtrees-dev:v1.2.3-1-beta, pushed to docker hub, manifest created with beta
+# Supported characters in tag [a-zA-Z0-9\.-]
+
+name: "Build Webtrees"
+
+on:
+  push:
+    branches:
+      - "*"
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+**
+  pull_request:
+    branches:
+    - "*"
+#  schedule:
+#    -cron: '0 0 * * 0' # weekly
+  workflow_dispatch:
+    branches:
+      - "*"
+
+env:
+  QEMU_VERSION: "v5.1.0-7"
+  DOCKER_FILE: Dockerfile.github
+  COMMIT_SHA: ${{ github.sha }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+       include:
+        - arch: "amd64"
+          qemu-arch: "x86_64"
+        - arch: "arm32v7"
+          qemu-arch: "arm"
+        - arch: "arm64v8"
+          qemu-arch: "aarch64"
+        - arch: "ppc64le"
+          qemu-arch: "ppc64le"
+        - arch: "s390x"
+          qemu-arch: "s390x"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Preparation 
+        id: prep
+        run: |
+          BRANCH=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g")
+          TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/tags\///g")
+          echo "BRANCH: ${BRANCH}"
+          echo "TAG: ${TAG}"
+          echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees-dev
+          echo ::set-output name=BUILD_VERSION::$(echo ${GITHUB_SHA} | cut -c1-8)
+          echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo ::set-output name=WT_VERSION::$(grep -oE 'WT_VERSION=(\w*.\w*.\w*)' Dockerfile.github | cut -d= -f2)
+          if [[ "${TAG}" =~ ^v[0-9\.-]*$ ]]; then
+            echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees
+          fi
+          if [[ "${TAG}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]+$ ]]; then
+            echo ::set-output name=BUILD_VERSION::${TAG}
+          fi
+          chmod 775 docker.sh
+          ./docker.sh prepare
+      - name: "Build Docker Image"
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
+          BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
+          BUILD_REF: ${{ env.COMMIT_SHA }}
+          TARGET: ${{ steps.prep.outputs.TARGET }}
+          WT_VERSION: ${{ steps.prep.outputs.WT_VERSION }}
+        run: |
+          echo "BUILD_VERSION: $BUILD_VERSION"
+          echo BUILD_DATE: $BUILD_DATE
+          echo BUILD_REF: $BUILD_REF
+          echo TARGET: ${{ env.TARGET }}
+          echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
+          echo WT_VERSION: $WT_VERSION
+          ./docker.sh build
+      - name: "Test Docker Image"
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
+          BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
+          BUILD_REF: ${{ env.COMMIT_SHA }}
+          TARGET: ${{ steps.prep.outputs.TARGET }}
+          WT_VERSION: ${{ steps.prep.outputs.WT_VERSION }}
+        run: ./docker.sh test
+      - name: "Push Docker Image"
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
+          BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
+          BUILD_REF: ${{ env.COMMIT_SHA }}
+          TARGET: ${{ steps.prep.outputs.TARGET }}
+          WT_VERSION: ${{ steps.prep.outputs.WT_VERSION }}
+        run: |
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]*$ ]]; then
+            ./docker.sh tag
+            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+            ./docker.sh push
+            docker logout
+          fi
+
+  manifest:
+    needs: build
+    runs-on: ubuntu-20.04
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Preparation 
+        id: prep
+        run: |
+          BRANCH=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g")
+          TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/tags\///g")
+          echo "BRANCH: ${BRANCH}"
+          echo "TAG: ${TAG}"
+          echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees-dev
+          echo ::set-output name=BUILD_VERSION::$(echo ${GITHUB_SHA} | cut -c1-8)
+          echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo ::set-output name=WT_VERSION::$(grep -oE 'WT_VERSION=(\w*.\w*.\w*)' Dockerfile.github | cut -d= -f2)
+          if [[ "${TAG}" =~ ^v[0-9\.-]*$ ]]; then
+            echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees
+          fi
+          if [[ "${TAG}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]+$ ]]; then
+            echo ::set-output name=BUILD_VERSION::${TAG}
+          fi
+          chmod 775 docker.sh
+          ./docker.sh prepare
+      - name: "Create and push manifest"
+        id: manifest
+        env:
+          ARCH: ${{ matrix.arch }}
+          QEMU_ARCH: ${{ matrix.qemu-arch }}
+          BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
+          BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
+          BUILD_REF: ${{ env.COMMIT_SHA }}
+          TARGET: ${{ steps.prep.outputs.TARGET }}
+          WT_VERSION: ${{ steps.prep.outputs.WT_VERSION }}
+        run: |
+          echo "BUILD_VERSION: $BUILD_VERSION"
+          echo BUILD_DATE: $BUILD_DATE
+          echo BUILD_REF: $BUILD_REF
+          echo TARGET: ${{ env.TARGET }}
+          echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
+          echo WT_VERSION: $WT_VERSION
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]*$ ]]; then
+            echo Writing Manifest.
+            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+            ./docker.sh manifest-list-version
+            ./docker.sh manifest-list-test-beta-latest
+            docker logout
+          else
+            echo Skipped writing Manifest.
+          fi
