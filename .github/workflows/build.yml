@@ -160,8 +160,8 @@ jobs:
           if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]*$ ]]; then
             echo Writing Manifest.
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-            ./docker.sh manifest-list-version "" "default"
-            ./docker.sh manifest-list-test-beta-latest "" "default"
+            ./docker.sh manifest-list-version
+            ./docker.sh manifest-list-test-beta-latest
             docker logout
           else
             echo Skipped writing Manifest.

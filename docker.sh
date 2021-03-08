@@ -4,8 +4,6 @@ set -o errexit
 
 main() {
   # arg 1 holds switch string
-  # arg 2 holds node version
-  # arg 3 holds tag suffix
 
   case $1 in
   "prepare")
@@ -24,10 +22,10 @@ main() {
     docker_push
     ;;
   "manifest-list-version")
-    docker_manifest_list_version "$2" "$3"
+    docker_manifest_list_version
     ;;
   "manifest-list-test-beta-latest")
-    docker_manifest_list_test_beta_latest "$2" "$3"
+    docker_manifest_list_test_beta_latest
     ;;
   *)
     echo "none of above!"
@@ -111,7 +109,7 @@ function docker_manifest_list_version() {
   
   docker manifest push ${TARGET}:${BUILD_VERSION}
   
-  docker run --rm mplatform/mquery ${TARGET}:${BUILD_VERSION}
+  #docker run --rm mplatform/mquery ${TARGET}:${BUILD_VERSION}
 }
 
 function docker_manifest_list_test_beta_latest() {
@@ -140,7 +138,7 @@ function docker_manifest_list_test_beta_latest() {
 
   docker manifest push ${TARGET}:${TAG_PREFIX}
   
-  docker run --rm mplatform/mquery ${TARGET}:${TAG_PREFIX}
+  #docker run --rm mplatform/mquery ${TARGET}:${TAG_PREFIX}
 }
 
 function setup_dependencies() {
@@ -195,4 +193,4 @@ function prepare_qemu() {
     popd
 }
 
-main "$1" "$2" "$3"
+main "$1"
