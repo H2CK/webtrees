@@ -1,4 +1,4 @@
-![Travis (.com) branch](https://img.shields.io/travis/com/H2CK/webtrees/master?label=multi-arch%20build&style=plastic) ![Docker Pulls](https://img.shields.io/docker/pulls/dtjs48jkt/webtrees?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/H2CK/webtrees?style=plastic)
+[![Build Webtrees](https://github.com/H2CK/webtrees/actions/workflows/build.yml/badge.svg)](https://github.com/H2CK/webtrees/actions/workflows/build.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/dtjs48jkt/webtrees?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/H2CK/webtrees?style=plastic)
 
 # docker-webtrees
 
