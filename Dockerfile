@@ -5,12 +5,11 @@ ENV DEBIAN_FRONTEND="noninteractive" HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.U
 ENV supervisor_conf /etc/supervisor/supervisord.conf
 ENV security_conf /etc/apache2/conf-available/security.conf
 ENV start_scripts_path /bin
-ENV WT_VERSION="2.0.11"
+ENV WT_VERSION="2.0.12"
 
 # Update packages from baseimage
 RUN apt-get update -qq
 # Install and activate necessary software
-# Remark: Apache module mod_wsgi is installed but not enabled (anymore)
 RUN apt-get upgrade -qy && apt-get install -qy \
     apt-utils \
     cron \
