@@ -2,7 +2,7 @@
 
 /**
  * webtrees: online genealogy
- * Copyright (C) 2019 webtrees development team
+ * Copyright (C) 2021 webtrees development team
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -70,7 +70,7 @@ class Auth
     {
         $user = $user ?? self::user();
 
-        return $user->getPreference(User::PREF_IS_ADMINISTRATOR) === '1';
+        return $user->getPreference(UserInterface::PREF_IS_ADMINISTRATOR) === '1';
     }
 
     /**
@@ -85,7 +85,7 @@ class Auth
     {
         $user = $user ?? self::user();
 
-        return self::isAdmin($user) || $tree->getUserPreference($user, User::PREF_TREE_ROLE) === User::ROLE_MANAGER;
+        return self::isAdmin($user) || $tree->getUserPreference($user, UserInterface::PREF_TREE_ROLE) === UserInterface::ROLE_MANAGER;
     }
 
     /**
@@ -100,7 +100,9 @@ class Auth
     {
         $user = $user ?? self::user();
 
-        return self::isManager($tree, $user) || $tree->getUserPreference($user, User::PREF_TREE_ROLE) === User::ROLE_MODERATOR;
+        return
+            self::isManager($tree, $user) ||
+            $tree->getUserPreference($user, UserInterface::PREF_TREE_ROLE) === UserInterface::ROLE_MODERATOR;
     }
 
     /**
@@ -115,7 +117,9 @@ class Auth
     {
         $user = $user ?? self::user();
 
-        return self::isModerator($tree, $user) || $tree->getUserPreference($user, User::PREF_TREE_ROLE) === 'edit';
+        return
+            self::isModerator($tree, $user) ||
+            $tree->getUserPreference($user, UserInterface::PREF_TREE_ROLE) === UserInterface::ROLE_EDITOR;
     }
 
     /**
@@ -130,7 +134,9 @@ class Auth
     {
         $user = $user ?? self::user();
 
-        return self::isEditor($tree, $user) || $tree->getUserPreference($user, User::PREF_TREE_ROLE) === 'access';
+        return
+            self::isEditor($tree, $user) ||
+            $tree->getUserPreference($user, UserInterface::PREF_TREE_ROLE) === UserInterface::ROLE_MEMBER;
     }
 
     /**
@@ -245,71 +251,109 @@ class Auth
      * @throws FamilyNotFoundException
      * @throws FamilyAccessDeniedException
      */
-    public static function checkFamilyAccess(Family $family = null, bool $edit = false): Family
+    public static function checkFamilyAccess(?Family $family, bool $edit = false): Family
     {
         if ($family === null) {
             throw new FamilyNotFoundException();
         }
 
-        if (!$family->canShow()) {
-            throw new FamilyAccessDeniedException();
+        if ($edit && $family->canEdit()) {
+            $family->lock();
+
+            return $family;
         }
 
-        if ($edit && !$family->canEdit()) {
-            throw new FamilyAccessDeniedException();
+        if ($family->canShow()) {
+            return $family;
         }
 
-        return $family;
+        throw new FamilyAccessDeniedException();
     }
-	
-     /**
-      * @param Header|null $header
-      * @param bool        $edit
-      *
-      * @return Header
-      * @throws RecordNotFoundException
-      * @throws RecordAccessDeniedException
-      */
-     public static function checkHeaderAccess(?Header $header, bool $edit = false): Header
-     {
-         if ($header === null) {
-             throw new RecordNotFoundException();
-         }
 
-         if ($edit && $header->canEdit()) {
-             return $header;
-         }
+    /**
+     * @param Header|null $header
+     * @param bool        $edit
+     *
+     * @return Header
+     * @throws RecordNotFoundException
+     * @throws RecordAccessDeniedException
+     */
+    public static function checkHeaderAccess(?Header $header, bool $edit = false): Header
+    {
+        if ($header === null) {
+            throw new RecordNotFoundException();
+        }
 
-         if ($header->canShow()) {
-             return $header;
-         }
+        if ($edit && $header->canEdit()) {
+            $header->lock();
 
-         throw new RecordAccessDeniedException();
-     }
+            return $header;
+        }
+
+        if ($header->canShow()) {
+            return $header;
+        }
+
+        throw new RecordAccessDeniedException();
+    }
 
     /**
      * @param Individual|null $individual
      * @param bool            $edit
+     * @param bool            $chart      For some charts, we can show private records
      *
      * @return Individual
      * @throws IndividualNotFoundException
      * @throws IndividualAccessDeniedException
      */
-    public static function checkIndividualAccess(Individual $individual = null, bool $edit = false): Individual
+    public static function checkIndividualAccess(?Individual $individual, bool $edit = false, $chart = false): Individual
     {
         if ($individual === null) {
             throw new IndividualNotFoundException();
         }
 
-        if (!$individual->canShow()) {
-            throw new IndividualAccessDeniedException();
+        if ($edit && $individual->canEdit()) {
+            $individual->lock();
+
+            return $individual;
         }
 
-        if ($edit && !$individual->canEdit()) {
-            throw new IndividualAccessDeniedException();
+        if ($chart && $individual->tree()->getPreference('SHOW_PRIVATE_RELATIONSHIPS') === '1') {
+            return $individual;
         }
 
-        return $individual;
+        if ($individual->canShow()) {
+            return $individual;
+        }
+
+        throw new IndividualAccessDeniedException();
+    }
+
+    /**
+     * @param Location|null $location
+     * @param bool       $edit
+     *
+     * @return Location
+     * @throws RecordNotFoundException
+     * @throws RecordAccessDeniedException
+     */
+    public static function checkLocationAccess(?Location $location, bool $edit = false): Location
+    {
+        if ($location === null) {
+            throw new RecordNotFoundException();
+        }
+
+        if ($edit && $location->canEdit()) {
+            $location->lock();
+
+            return $location;
+        }
+
+        if ($location->canShow()) {
+            return $location;
+        }
+
+        throw new RecordAccessDeniedException();
     }
 
     /**
@@ -320,21 +364,23 @@ class Auth
      * @throws MediaNotFoundException
      * @throws MediaAccessDeniedException
      */
-    public static function checkMediaAccess(Media $media = null, bool $edit = false): Media
+    public static function checkMediaAccess(?Media $media, bool $edit = false): Media
     {
         if ($media === null) {
             throw new MediaNotFoundException();
         }
 
-        if (!$media->canShow()) {
-            throw new MediaAccessDeniedException();
+        if ($edit && $media->canEdit()) {
+            $media->lock();
+
+            return $media;
         }
 
-        if ($edit && !$media->canEdit()) {
-            throw new MediaAccessDeniedException();
+        if ($media->canShow()) {
+            return $media;
         }
 
-        return $media;
+        throw new MediaAccessDeniedException();
     }
 
     /**
@@ -345,21 +391,23 @@ class Auth
      * @throws NoteNotFoundException
      * @throws NoteAccessDeniedException
      */
-    public static function checkNoteAccess(Note $note = null, bool $edit = false): Note
+    public static function checkNoteAccess(?Note $note, bool $edit = false): Note
     {
         if ($note === null) {
             throw new NoteNotFoundException();
         }
 
-        if (!$note->canShow()) {
-            throw new NoteAccessDeniedException();
+        if ($edit && $note->canEdit()) {
+            $note->lock();
+
+            return $note;
         }
 
-        if ($edit && !$note->canEdit()) {
-            throw new NoteAccessDeniedException();
+        if ($note->canShow()) {
+            return $note;
         }
 
-        return $note;
+        throw new NoteAccessDeniedException();
     }
 
     /**
@@ -370,21 +418,23 @@ class Auth
      * @throws RecordNotFoundException
      * @throws RecordAccessDeniedException
      */
-    public static function checkRecordAccess(GedcomRecord $record = null, bool $edit = false): GedcomRecord
+    public static function checkRecordAccess(?GedcomRecord $record, bool $edit = false): GedcomRecord
     {
         if ($record === null) {
             throw new RecordNotFoundException();
         }
 
-        if (!$record->canShow()) {
-            throw new RecordAccessDeniedException();
+        if ($edit && $record->canEdit()) {
+            $record->lock();
+
+            return $record;
         }
 
-        if ($edit && !$record->canEdit()) {
-            throw new RecordAccessDeniedException();
+        if ($record->canShow()) {
+            return $record;
         }
 
-        return $record;
+        throw new RecordAccessDeniedException();
     }
 
     /**
@@ -395,21 +445,23 @@ class Auth
      * @throws RepositoryNotFoundException
      * @throws RepositoryAccessDeniedException
      */
-    public static function checkRepositoryAccess(Repository $repository = null, bool $edit = false): Repository
+    public static function checkRepositoryAccess(?Repository $repository, bool $edit = false): Repository
     {
         if ($repository === null) {
             throw new RepositoryNotFoundException();
         }
 
-        if (!$repository->canShow()) {
-            throw new RepositoryAccessDeniedException();
+        if ($edit && $repository->canEdit()) {
+            $repository->lock();
+
+            return $repository;
         }
 
-        if ($edit && !$repository->canEdit()) {
-            throw new RepositoryAccessDeniedException();
+        if ($repository->canShow()) {
+            return $repository;
         }
 
-        return $repository;
+        throw new RepositoryAccessDeniedException();
     }
 
     /**
@@ -420,23 +472,25 @@ class Auth
      * @throws SourceNotFoundException
      * @throws SourceAccessDeniedException
      */
-    public static function checkSourceAccess(Source $source = null, bool $edit = false): Source
+    public static function checkSourceAccess(?Source $source, bool $edit = false): Source
     {
         if ($source === null) {
             throw new SourceNotFoundException();
         }
 
-        if (!$source->canShow()) {
-            throw new SourceAccessDeniedException();
+        if ($edit && $source->canEdit()) {
+            $source->lock();
+
+            return $source;
         }
 
-        if ($edit && !$source->canEdit()) {
-            throw new SourceAccessDeniedException();
+        if ($source->canShow()) {
+            return $source;
         }
 
-        return $source;
+        throw new SourceAccessDeniedException();
     }
-    
+
     /*
      * @param Submitter|null $submitter
      * @param bool           $edit
@@ -445,58 +499,62 @@ class Auth
      * @throws RecordNotFoundException
      * @throws RecordAccessDeniedException
      */
-    public static function checkSubmitterAccess(Submitter $submitter = null, bool $edit = false): Submitter
+    public static function checkSubmitterAccess(?Submitter $submitter, bool $edit = false): Submitter
     {
         if ($submitter === null) {
             throw new RecordNotFoundException();
         }
 
-        if (!$submitter->canShow()) {
-            throw new RecordAccessDeniedException();
+        if ($edit && $submitter->canEdit()) {
+            $submitter->lock();
+
+            return $submitter;
         }
 
-        if ($edit && !$submitter->canEdit()) {
-            throw new RecordAccessDeniedException();
+        if ($submitter->canShow()) {
+            return $submitter;
         }
 
-        return $submitter;
+        throw new RecordAccessDeniedException();
     }
-	
-     /*
-      * @param Submission|null $submission
-      * @param bool            $edit
-      *
-      * @return Submission
-      * @throws RecordNotFoundException
-      * @throws RecordAccessDeniedException
-      */
-     public static function checkSubmissionAccess(?Submission $submission, bool $edit = false): Submission
-     {
-         if ($submission === null) {
-             throw new RecordNotFoundException();
-         }
 
-         if ($edit && $submission->canEdit()) {
-             return $submission;
-         }
+    /*
+     * @param Submission|null $submission
+     * @param bool            $edit
+     *
+     * @return Submission
+     * @throws RecordNotFoundException
+     * @throws RecordAccessDeniedException
+     */
+    public static function checkSubmissionAccess(?Submission $submission, bool $edit = false): Submission
+    {
+        if ($submission === null) {
+            throw new RecordNotFoundException();
+        }
 
-         if ($submission->canShow()) {
-             return $submission;
-         }
+        if ($edit && $submission->canEdit()) {
+            $submission->lock();
 
-         throw new RecordAccessDeniedException();
-     }
+            return $submission;
+        }
 
-     /**
+        if ($submission->canShow()) {
+            return $submission;
+        }
+
+        throw new RecordAccessDeniedException();
+    }
+
+    /**
      * @return array<int,string>
      */
     public static function accessLevelNames(): array
     {
         return [
-            Auth::PRIV_PRIVATE => I18N::translate('Show to visitors'),
-            Auth::PRIV_USER    => I18N::translate('Show to members'),
-            Auth::PRIV_NONE    => I18N::translate('Show to managers'),
-            Auth::PRIV_HIDE    => I18N::translate('Hide from everyone'),
+            self::PRIV_PRIVATE => I18N::translate('Show to visitors'),
+            self::PRIV_USER    => I18N::translate('Show to members'),
+            self::PRIV_NONE    => I18N::translate('Show to managers'),
+            self::PRIV_HIDE    => I18N::translate('Hide from everyone'),
         ];
     }
 
