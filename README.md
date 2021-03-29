@@ -132,3 +132,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2021/01/04:** Webtrees 2.0.11 - Added support for pretty urls
 * **2021/03/11:** Webtrees 2.0.12
 * **2021/03/14:** Webtrees 2.0.13
+* **2021/03/29:** Webtrees 2.0.14
