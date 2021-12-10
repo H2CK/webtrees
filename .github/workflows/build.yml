@@ -67,6 +67,9 @@ jobs:
           if [[ "${TAG}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]+$ ]]; then
             echo ::set-output name=BUILD_VERSION::${TAG}
           fi
+          if [[ "${TAG}" =~ ^refs\/pull.*$ ]]; then
+            echo ::set-output name=BUILD_VERSION::build-pull
+          fi
           chmod 775 docker.sh
           ./docker.sh prepare
       - name: "Build Docker Image"
