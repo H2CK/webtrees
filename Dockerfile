@@ -94,7 +94,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 770 /var/www/html
        
 #Add Apache configuration
-ADD php.ini /etc/php/7.4/apache2/
+ADD php.ini /etc/php/8.1/apache2/
 ADD webtrees.conf /etc/apache2/sites-available/
 ADD webtrees_insecure.conf /etc/apache2/sites-available/
 
