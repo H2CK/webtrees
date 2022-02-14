@@ -10,7 +10,6 @@ ENV WT_VERSION="2.1.0-alpha.2"
 # Install and activate necessary software
 RUN apt-get update -qq && apt-get upgrade -qy && apt-get install -qy \
     apt-utils \
-    software-properties-common \ 
     cron \
     supervisor \
     apache2 \
@@ -22,30 +21,27 @@ RUN apt-get update -qq && apt-get upgrade -qy && apt-get install -qy \
     unzip \
     sed \
     mysql-client \
-    && add-apt-repository ppa:ondrej/php -y \
-    && apt-get update -qq \
-    && apt-get upgrade -qy \
-    && apt-get install -qy \
-    php8.1 \
-    libapache2-mod-php8.1 \
-    php8.1-mysql \
-    php8.1-pgsql \
-    php8.1-pdo-odbc \
-    php8.1-curl \
-    php8.1-gd \
-    php8.1-intl \
-    php8.1-imagick \
-    php8.1-imap \
-    php8.1-memcache \
-    php8.1-pspell \
-    php8.1-sqlite3 \
-    php8.1-tidy \
-    php8.1-xmlrpc \
-    php8.1-xsl \
-    php8.1-mbstring \
-    php8.1-opcache \
-    php8.1-apcu \
-    php8.1-zip \
+    php \
+    libapache2-mod-php \
+    php-mysql \
+    php-pgsql \
+    php-pdo-odbc \
+    php-curl \
+    php-gd \
+    php-intl \
+    php-imagick \
+    php-imap \
+    php-memcache \
+    php-pear \
+    php-pspell \
+    php-sqlite3 \
+    php-tidy \
+    php-xmlrpc \
+    php-xsl \
+    php-mbstring \
+    php-opcache \
+    php-apcu \
+    php-zip \
     && a2enmod ssl \
     && a2enmod headers \
     && a2enmod rewrite \
@@ -94,7 +90,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 770 /var/www/html
        
 #Add Apache configuration
-ADD php.ini /etc/php/8.1/apache2/
+ADD php.ini /etc/php/7.4/apache2/
 ADD webtrees.conf /etc/apache2/sites-available/
 ADD webtrees_insecure.conf /etc/apache2/sites-available/
 
