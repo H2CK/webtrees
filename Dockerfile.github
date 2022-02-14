@@ -79,7 +79,7 @@ RUN apt-get update -qq && apt-get upgrade -qy && apt-get install -qy \
     && openssl rand -out /root/.rnd -hex 256 \
     && openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -keyout /crt/webtrees.key -out /crt/webtrees.crt -subj "/C=DE/ST=H/L=F/O=Webtrees/OU=www.webtrees.net/CN=webtrees" \ 
     && chmod 640 /crt/* \
-    && wget --no-check-certificate https://github.com/fisharebest/webtrees/releases/download/${WT_VERSION}/webtrees-${WT_VERSION}.zip -O /tmp/webtrees.zip \
+    && wget --no-check-certificate https://github.com/fisharebest/webtrees/releases/download/2.1.0-alpha.2/webtrees-2.1.0-alpha.2.zip -O /tmp/webtrees.zip \
     && unzip -d /tmp/ -o /tmp/webtrees.zip \
     && rm -Rf /var/www/html \
     && mv /tmp/webtrees /var/www/html \
