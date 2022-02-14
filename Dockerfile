@@ -5,13 +5,12 @@ ENV DEBIAN_FRONTEND="noninteractive" HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.U
 ENV supervisor_conf /etc/supervisor/supervisord.conf
 ENV security_conf /etc/apache2/conf-available/security.conf
 ENV start_scripts_path /bin
-ENV WT_VERSION="2.0.19"
+ENV WT_VERSION="2.1.0-alpha.2"
 
-# Update packages from baseimage
-RUN apt-get update -qq
 # Install and activate necessary software
-RUN apt-get upgrade -qy && apt-get install -qy \
+RUN apt-get update -qq && apt-get upgrade -qy && apt-get install -qy \
     apt-utils \
+    software-properties-common \ 
     cron \
     supervisor \
     apache2 \
@@ -19,31 +18,34 @@ RUN apt-get upgrade -qy && apt-get install -qy \
     libexpat1 \
     ssl-cert \
     vim-tiny \
-    php \
-    libapache2-mod-php \
-    php-mysql \
-    php-pgsql \
-    php-pdo-odbc \
-    php-curl \
-    php-gd \
-    php-intl \
-    php-pear \
-    php-imagick \
-    php-imap \
-    php-memcache \
-    php-pspell \
-    php-sqlite3 \
-    php-tidy \
-    php-xmlrpc \
-    php-xsl \
-    php-mbstring \
-    php-opcache \
-    php-apcu \
-    php-zip \
     wget \
     unzip \
     sed \
     mysql-client \
+    && add-apt-repository ppa:ondrej/php -y \
+    && apt-get update -qq \
+    && apt-get upgrade -qy \
+    && apt-get install -qy \
+    php8.1 \
+    libapache2-mod-php8.1 \
+    php8.1-mysql \
+    php8.1-pgsql \
+    php8.1-pdo-odbc \
+    php8.1-curl \
+    php8.1-gd \
+    php8.1-intl \
+    php8.1-imagick \
+    php8.1-imap \
+    php8.1-memcache \
+    php8.1-pspell \
+    php8.1-sqlite3 \
+    php8.1-tidy \
+    php8.1-xmlrpc \
+    php8.1-xsl \
+    php8.1-mbstring \
+    php8.1-opcache \
+    php8.1-apcu \
+    php8.1-zip \
     && a2enmod ssl \
     && a2enmod headers \
     && a2enmod rewrite \
