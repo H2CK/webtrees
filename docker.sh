@@ -116,6 +116,8 @@ function docker_manifest_list_test_beta_latest() {
     export TAG_PREFIX="test";
   elif [[ ${BUILD_VERSION} == *"beta"* ]]; then
     export TAG_PREFIX="beta";
+  elif [[ ${BUILD_VERSION} == *"alpha"* ]]; then
+    export TAG_PREFIX="alpha";
   else
     export TAG_PREFIX="latest";
   fi

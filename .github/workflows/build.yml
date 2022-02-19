@@ -14,7 +14,7 @@ on:
     branches:
       - "*"
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+**
+      - "[0-9]+.[0-9]+.[0-9]+**"
   pull_request:
     branches:
     - "*"
@@ -57,14 +57,11 @@ jobs:
           TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/tags\///g")
           echo "BRANCH: ${BRANCH}"
           echo "TAG: ${TAG}"
-          echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees-dev
+          echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees
           echo ::set-output name=BUILD_VERSION::$(echo ${GITHUB_SHA} | cut -c1-8)
           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           echo ::set-output name=WT_VERSION::$(grep -oE 'WT_VERSION=(.*)' Dockerfile.github | cut -d= -f2)
-          if [[ "${TAG}" =~ ^v[0-9\.-]*$ ]]; then
-            echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees
-          fi
-          if [[ "${TAG}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]+$ ]]; then
+          if [[ "${TAG}" =~ ^[[0-9]+.[0-9]+.[0-9]+**$ ]]; then
             echo ::set-output name=BUILD_VERSION::${TAG}
           fi
           if [[ "${TAG}" =~ ^refs\/pull.*$ ]]; then
@@ -110,7 +107,7 @@ jobs:
           TARGET: ${{ steps.prep.outputs.TARGET }}
           WT_VERSION: ${{ steps.prep.outputs.WT_VERSION }}
         run: |
-          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]*$ ]]; then
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^[0-9]+.[0-9]+.[0-9]+**$ ]]; then
             ./docker.sh tag
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             ./docker.sh push
@@ -131,14 +128,11 @@ jobs:
           TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/tags\///g")
           echo "BRANCH: ${BRANCH}"
           echo "TAG: ${TAG}"
-          echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees-dev
+          echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees
           echo ::set-output name=BUILD_VERSION::$(echo ${GITHUB_SHA} | cut -c1-8)
           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          echo ::set-output name=WT_VERSION::$(grep -oE 'WT_VERSION=(\w*.\w*.\w*)' Dockerfile.github | cut -d= -f2)
-          if [[ "${TAG}" =~ ^v[0-9\.-]*$ ]]; then
-            echo ::set-output name=TARGET::${DOCKER_USERNAME}/webtrees
-          fi
-          if [[ "${TAG}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]+$ ]]; then
+          echo ::set-output name=WT_VERSION::$(grep -oE 'WT_VERSION=(.*)' Dockerfile.github | cut -d= -f2)
+          if [[ "${TAG}" =~ ^[0-9]+.[0-9]+.[0-9]+**$ ]]; then
             echo ::set-output name=BUILD_VERSION::${TAG}
           fi
           chmod 775 docker.sh
@@ -160,7 +154,7 @@ jobs:
           echo TARGET: ${{ env.TARGET }}
           echo COMMIT_SHA: ${{ env.COMMIT_SHA }}
           echo WT_VERSION: $WT_VERSION
-          if [[ "${{ env.BUILD_VERSION }}" =~ ^v[0-9\.-]*[a-zA-Z0-9\.-]*$ ]]; then
+          if [[ "${{ env.BUILD_VERSION }}" =~ ^[0-9]+.[0-9]+.[0-9]+**$ ]]; then
             echo Writing Manifest.
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             ./docker.sh manifest-list-version
