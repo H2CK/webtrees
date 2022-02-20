@@ -117,7 +117,7 @@ jobs:
   manifest:
     needs: build
     runs-on: ubuntu-20.04
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/')
 
     steps:
       - uses: actions/checkout@v2
