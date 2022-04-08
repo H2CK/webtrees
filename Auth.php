@@ -173,7 +173,7 @@ class Auth
 		$remote_user = null;
 		foreach ($headers as $header => $value) {
 			//echo "$header: $value <br />\n";
-			if ($header=="REMOTE_USER") {
+			if ($header=="##REMOTE_USER##") {
 				$remote_user = $value;
 			}
 		}
