@@ -161,7 +161,7 @@ class Auth
         $headers = apache_request_headers();
 		$remote_user = null;
 		foreach ($headers as $header => $value) {
-			if ($header=="REMOTE_USER") {
+			if ($header=="##REMOTE_USER##") {
 				$remote_user = $value;
 			}
 		}
