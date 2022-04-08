@@ -89,7 +89,8 @@ This image contains now the necessary libraries to optionally also select Postgr
 * `-e GROUP_ID` - allow access to mapped volumes
 * `-e PORT` - change port web server listens on
 * `-e UPDATE_ON_START` - if set to TRUE the auto-update functionality on restart is activated
-* `-e ENABLE_REMOTE_USER` - if set to TRUE use REMOTE_USER for authentication
+* `-e ENABLE_REMOTE_USER` - if set to TRUE use header variable REMOTE_USER for authentication
+* `-e HEADER_AUTH_VAR` - Sets the name of header variable used for authentication. Default is REMOTE_USER.
 * `-e DISABLE_SSL` - if set to TRUE the image only provides an http entpoint. You should also set the port, because default port 443 is not modifed by this setting.
 * `-e DB_USER` - can only be used at first instantiation to set the db username. Password (DB_PASSWORD) must also be set (see below), otherwise no initial setup is performed. If not present (only DB_PASSWORD is present) the default will be root.
 * `-e DB_PASSWORD` - can only be used at first instantiation to set the db setting during instantiation and perform initial application setup.
@@ -141,3 +142,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2022/03/16:** Webtrees 2.0.21
 * **2022/03/22:** Webtrees 2.0.22
 * **2022/04/03:** Webtrees 2.0.23
+* **2022/04/08:** Webtrees 2.0.23 - Added configurable auth header
