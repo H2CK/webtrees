@@ -164,7 +164,7 @@ jobs:
             echo Writing Manifest.
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             ./docker.sh manifest-list-version
-            ./docker.sh manifest-list-test-beta-latest
+            # ./docker.sh manifest-list-test-beta-latest Deactivated for 2.0.x version
             docker logout
           else
             echo Skipped writing Manifest.
