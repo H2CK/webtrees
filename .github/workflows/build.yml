@@ -2,9 +2,9 @@
 # Behaviour:
 # Any commit leads to building the docker container and testing the container
 # Handling of tags:
-# - v1.2.3-1      -> tagged as dtjs48jkt/webtrees:v1.2.3-1, pushed to docker hub, manifest created with latest
-# - v1.2.3-1-test -> (contains test) tagged as dtjs48jkt/webtrees-dev:v1.2.3-1-test, pushed to docker hub, manifest created with test
-# - v1.2.3-1-beta -> (contains beta) tagged as dtjs48jkt/webtrees-dev:v1.2.3-1-beta, pushed to docker hub, manifest created with beta
+# - 1.2.3-1      -> tagged as dtjs48jkt/webtrees:1.2.3-1, pushed to docker hub, manifest created with latest
+# - 1.2.3-1-test -> (contains test) tagged as dtjs48jkt/webtrees:1.2.3-1-test, pushed to docker hub, manifest created with test
+# - 1.2.3-1-beta -> (contains beta) tagged as dtjs48jkt/webtrees:1.2.3-1-beta, pushed to docker hub, manifest created with beta
 # Supported characters in tag [a-zA-Z0-9\.-]
 
 name: "Build Webtrees"
@@ -18,11 +18,7 @@ on:
   pull_request:
     branches:
     - "*"
-#  schedule:
-#    -cron: '0 0 * * 0' # weekly
   workflow_dispatch:
-    branches:
-      - "*"
 
 env:
   QEMU_VERSION: "v5.1.0-7"
