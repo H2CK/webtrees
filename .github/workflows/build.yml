@@ -41,7 +41,7 @@ jobs:
           platform: "linux/arm/v7"
         - arch: "arm64v8"
           qemu-arch: "aarch64"
-          platform: "linux/arm/v8"
+          platform: "linux/arm64/v8"
         - arch: "ppc64le"
           qemu-arch: "ppc64le"
           platform: "linux/ppc64le"
