@@ -53,7 +53,8 @@ function docker_build() {
   echo "DOCKER BUILD: qemu arch - ${QEMU_ARCH}."
   echo "DOCKER BUILD: docker file - ${DOCKER_FILE}."
 
-  docker build --no-cache \
+  docker build --platform ${PLATFORM} \
+    --no-cache \
     --build-arg ARCH=${ARCH} \
     --build-arg BUILD_DATE=${BUILD_DATE} \
     --build-arg BUILD_VERSION=${BUILD_VERSION} \

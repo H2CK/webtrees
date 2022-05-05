@@ -35,14 +35,19 @@ jobs:
        include:
         - arch: "amd64"
           qemu-arch: "x86_64"
+          platform: "linux/amd64"
         - arch: "arm32v7"
           qemu-arch: "arm"
+          platform: "linux/arm/v7"
         - arch: "arm64v8"
           qemu-arch: "aarch64"
+          platform: "linux/arm/v8"
         - arch: "ppc64le"
           qemu-arch: "ppc64le"
+          platform: "linux/ppc64le"
         - arch: "s390x"
           qemu-arch: "s390x"
+          platform: "linux/s390x"
 
     steps:
       - uses: actions/checkout@v2
@@ -69,6 +74,7 @@ jobs:
         env:
           ARCH: ${{ matrix.arch }}
           QEMU_ARCH: ${{ matrix.qemu-arch }}
+          PLATFORM: ${{ matrix.platform }}
           BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
           BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
           BUILD_REF: ${{ env.COMMIT_SHA }}
@@ -86,6 +92,7 @@ jobs:
         env:
           ARCH: ${{ matrix.arch }}
           QEMU_ARCH: ${{ matrix.qemu-arch }}
+          PLATFORM: ${{ matrix.platform }}
           BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
           BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
           BUILD_REF: ${{ env.COMMIT_SHA }}
@@ -97,6 +104,7 @@ jobs:
         env:
           ARCH: ${{ matrix.arch }}
           QEMU_ARCH: ${{ matrix.qemu-arch }}
+          PLATFORM: ${{ matrix.platform }}
           BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
           BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
           BUILD_REF: ${{ env.COMMIT_SHA }}
@@ -135,6 +143,7 @@ jobs:
         env:
           ARCH: ${{ matrix.arch }}
           QEMU_ARCH: ${{ matrix.qemu-arch }}
+          PLATFORM: ${{ mtrix.platform }}
           BUILD_VERSION: ${{ steps.prep.outputs.BUILD_VERSION }}
           BUILD_DATE: ${{ steps.prep.outputs.BUILD_DATE }}
           BUILD_REF: ${{ env.COMMIT_SHA }}
