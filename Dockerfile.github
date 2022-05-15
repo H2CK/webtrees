@@ -109,6 +109,7 @@ CMD ["./start.sh"]
 
 ADD Auth.php /Auth.php
 ADD config.ini.php /config.ini.php
+ADD config_blank.ini.php /config_blank.ini.php
 ADD webtrees.sql /webtrees.sql
 COPY .htaccess /var/www/html/.htaccess
 RUN chown -R www-data:www-data /var/www/html \

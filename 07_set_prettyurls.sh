@@ -24,7 +24,10 @@ then
             echo "rewrite_urls=\"1\"" >> $CONFIG_FILE
         fi
     else
-        echo "ERROR: Configuration file $CONFIG_FILE to set pretty urls not found."
+        echo "Creating the configuration file $CONFIG_FILE and setting rewrite_urls."
+        cp /config_blank.ini.php "$CONFIG_FILE"
+        echo "Adding rewrite_urls=\"1\"."
+        echo "rewrite_urls=\"1\"" >> $CONFIG_FILE
     fi
 else
     echo "PRETTYURLS not explicitly activated. Nothing to do."
@@ -44,7 +47,10 @@ then
             echo "base_url=\"$WT_BASE_URL\"" >> $CONFIG_FILE
         fi
     else
-        echo "ERROR: Configuration file $CONFIG_FILE to set base_url not found."
+        echo "Creating the configuration file $CONFIG_FILE and setting base_url."
+        cp /config_blank.ini.php "$CONFIG_FILE"
+        echo "Adding base_url=\"$WT_BASE_URL\"."
+        echo "base_url=\"$WT_BASE_URL\"" >> $CONFIG_FILE
     fi
 else
     echo "BASE_URL not explicitly set. Nothing to do."
