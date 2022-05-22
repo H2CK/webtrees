@@ -150,3 +150,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2022/04/20:** Webtrees 2.1.0
 * **2022/04/29:** Webtrees 2.1.1
 * **2022/05/05:** Webtrees 2.1.2
+* **2022/05/22:** Webtrees 2.1.4
