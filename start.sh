@@ -6,5 +6,6 @@
 /bin/05_switch_http_https.sh
 /bin/06_initialize_db.sh
 /bin/07_set_prettyurls.sh
+/bin/08_set_uploadsize.sh
 
 /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf

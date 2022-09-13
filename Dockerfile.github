@@ -95,6 +95,7 @@ COPY 04_enable_REMOTE_USER.sh ${start_scripts_path}
 COPY 05_switch_http_https.sh ${start_scripts_path}
 COPY 07_set_prettyurls.sh ${start_scripts_path}
 COPY 06_initialize_db.sh ${start_scripts_path}
+COPY 08_set_uploadsize.sh ${start_scripts_path}
 COPY start.sh /start.sh
 RUN chmod +x ${start_scripts_path}/01_user_config.sh \
     && chmod +x ${start_scripts_path}/02_auto_update.sh \
@@ -103,6 +104,7 @@ RUN chmod +x ${start_scripts_path}/01_user_config.sh \
     && chmod +x ${start_scripts_path}/05_switch_http_https.sh \
     && chmod +x ${start_scripts_path}/07_set_prettyurls.sh \
     && chmod +x ${start_scripts_path}/06_initialize_db.sh \
+    && chmod +x ${start_scripts_path}/08_set_uploadsize.sh \
     && chmod +x /start.sh
 
 CMD ["./start.sh"]

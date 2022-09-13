@@ -102,6 +102,7 @@ This image contains now the necessary libraries to optionally also select Postgr
 * `-e WT_ADMINMAIL` - can only be used at first instantiation to set the initial webtrees admin user account mail address. Password (DB_PASSWORD) must also be set (see above), otherwise no initial setup is performed. If not present (only DB_PASSWORD is present) the default will be noreply@webtrees.net.
 * `-e PRETTYURLS` - set to TRUE to allow usage of pretty urls.
 * `-e BASE_URL` - set to the correct url to allow usage of pretty urls.
+* `-e MAX_UPLOAD_SIZE` - set maximum file upload size. Default is 2M.
 
 ## Versions
 
@@ -156,3 +157,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2022/06/20:** Webtrees 2.0.25
 * **2022/06/21:** Webtrees 2.1.6
 * **2022/07/29:** Webtrees 2.1.7
+* **2022/09/13:** Webtrees 2.1.7 - added possibilty to modify file upload size
