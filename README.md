@@ -103,6 +103,7 @@ This image contains now the necessary libraries to optionally also select Postgr
 * `-e PRETTYURLS` - set to TRUE to allow usage of pretty urls.
 * `-e BASE_URL` - set to the correct url to allow usage of pretty urls.
 * `-e MAX_UPLOAD_SIZE` - set maximum file upload size. Default is 2M.
+* `-e POST_MAX_SIZE` - set maximum post size. Default is 8M.
 
 ## Versions
 
@@ -158,3 +159,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2022/06/21:** Webtrees 2.1.6
 * **2022/07/29:** Webtrees 2.1.7
 * **2022/09/13:** Webtrees 2.1.7 - added possibilty to modify file upload size
+* **2022/09/16:** Webtrees 2.1.7 - added possibilty to modify max post size
