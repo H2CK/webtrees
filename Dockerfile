@@ -16,7 +16,6 @@ RUN apt-get update -qq && apt-get upgrade -qy && apt-get install -qy \
     apache2-utils \
     libexpat1 \
     ssl-cert \
-    vim-tiny \
     wget \
     unzip \
     sed \
