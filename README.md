@@ -145,3 +145,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2022/04/08:** Webtrees 2.0.23 - Added configurable auth header
 * **2022/06/04:** Webtrees 2.0.24
 * **2022/06/20:** Webtrees 2.0.25
+* **2022/11/28:** Webtrees 2.0.26
