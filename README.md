@@ -162,3 +162,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2022/09/16:** Webtrees 2.1.7 - added possibilty to modify max post size
 * **2022/11/28:** Webtrees 2.0.26
 * **2022/11/28:** Webtrees 2.1.8
+* **2022/12/01:** Webtrees 2.1.9
