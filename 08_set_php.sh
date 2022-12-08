@@ -8,7 +8,7 @@
 MAXUPLOADSIZE=${MAX_UPLOAD_SIZE:-2M}
 POSTMAXSIZE=${POST_MAX_SIZE:-8M}
 
-CONFIG_FILE=/etc/php/7.4/apache2/php.ini
+CONFIG_FILE=/etc/php/8.1/apache2/php.ini
 
 echo "Set max_upload_size."
 #Check if not yet set, if file exists, do nothing
