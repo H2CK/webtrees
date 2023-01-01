@@ -33,12 +33,17 @@ then
         sed -i 's/<DB_NAME>/'"$IDB_DB_NAME"'/g' /mod_webtrees.sql
         sed -i 's/<WT_ADMIN_NAME>/'"$IDB_WT_ADMIN"'/g' /mod_webtrees.sql
         #Encode password and escape for sed
-        WTCRYPT=$(php -r "echo crypt('$IDB_WT_ADMINPW', '');")
+        RANDOM22=$(php -r "echo substr(base64_encode(openssl_random_pseudo_bytes(17)),0,22);")
+        WTSALT=$(php -r "echo '\$2y\$10\$'.str_replace('+','.','$RANDOM22');")
+        WTCRYPT=$(php -r "echo crypt('$IDB_WT_ADMINPW', '$WTSALT');")
         sed -i 's/<WT_ADMIN_PW>/'"$(echo $WTCRYPT | sed -e 's/[]\/$*.^[]/\\&/g')"'/g' /mod_webtrees.sql
         sed -i 's/<WT_ADMIN_MAIL>/'"$IDB_WT_ADMINMAIL"'/g' /mod_webtrees.sql
         #Write to database
         mysql -u "$IDB_USER" --password="$IDB_PASSWORD" -h "$IDB_HOST" < /mod_webtrees.sql
         #Alternative to set Webtrees admin user:
         #echo "UPDATE wt_user SET user_name='$IDB_WT_ADMIN', email='$IDB_WT_ADMINMAIL', real_name='Admin', password='$WTCRYPT' WHERE user_id=1" | mysql -u "$IDB_USER" --password="$IDB_PASSWORD" -h "$IDB_HOST" "$IDB_DB_NAME"
+        unset RANDOM22
+        unset WTSALT
+        unset WTCRYPT
     fi
 fi
