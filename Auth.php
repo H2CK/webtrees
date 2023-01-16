@@ -57,7 +57,7 @@ class Auth
      */
     public static function isAdmin(UserInterface $user = null): bool
     {
-        $user = $user ?? self::user();
+        $user ??= self::user();
 
         return $user->getPreference(UserInterface::PREF_IS_ADMINISTRATOR) === '1';
     }
@@ -72,7 +72,7 @@ class Auth
      */
     public static function isManager(Tree $tree, UserInterface $user = null): bool
     {
-        $user = $user ?? self::user();
+        $user ??= self::user();
 
         return self::isAdmin($user) || $tree->getUserPreference($user, UserInterface::PREF_TREE_ROLE) === UserInterface::ROLE_MANAGER;
     }
@@ -87,7 +87,7 @@ class Auth
      */
     public static function isModerator(Tree $tree, UserInterface $user = null): bool
     {
-        $user = $user ?? self::user();
+        $user ??= self::user();
 
         return
             self::isManager($tree, $user) ||
@@ -104,7 +104,7 @@ class Auth
      */
     public static function isEditor(Tree $tree, UserInterface $user = null): bool
     {
-        $user = $user ?? self::user();
+        $user ??= self::user();
 
         return
             self::isModerator($tree, $user) ||
@@ -121,7 +121,7 @@ class Auth
      */
     public static function isMember(Tree $tree, UserInterface $user = null): bool
     {
-        $user = $user ?? self::user();
+        $user ??= self::user();
 
         return
             self::isEditor($tree, $user) ||
@@ -138,7 +138,7 @@ class Auth
      */
     public static function accessLevel(Tree $tree, UserInterface $user = null): int
     {
-        $user = $user ?? self::user();
+        $user ??= self::user();
 
         if (self::isManager($tree, $user)) {
             return self::PRIV_NONE;
