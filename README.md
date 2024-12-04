@@ -5,8 +5,6 @@
 [webtrees](http://www.webtrees.net) is a free open source web-based genealogy application intended for collaborative use.
 It is compatible with standard 5.5.1-GEDCOM files. In this docker image based on phusion webtrees is provided. A database is not embedded in this image.
 
-Since 12/07/19 version 2.0 is officially released and also provided by this repository as docker image.
-
 This container now supports multiple architectures. That allows to run this image for example also on a Raspberry Pi.
 Please use the corresponding newly introduced image tags using the following syntax: ```<webtrees version>-<build version>-<architecture>```
 Supported architectures are: amd64, arm32v7, arm64v8, i386, ppc64le, s390x
@@ -174,3 +172,4 @@ This image contains now the necessary libraries to optionally also select Postgr
 * **2024/03/19:** Webtrees 2.1.19
 * **2024/11/24:** Webtrees 2.1.21
 * **2024/11/30:** Webtrees 2.1.22
+* **2024/11/30:** Webtrees 2.2.1
