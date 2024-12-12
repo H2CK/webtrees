@@ -120,7 +120,7 @@ function docker_manifest_list_test_beta_latest() {
   elif [[ ${BUILD_VERSION} == *"alpha"* ]]; then
     export TAG_PREFIX="alpha";
   else
-    export TAG_PREFIX="latest";
+    export TAG_PREFIX="2.1";
   fi
 
   echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${TAG_PREFIX}."
