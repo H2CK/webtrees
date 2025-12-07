@@ -74,7 +74,8 @@ It is also possible to active pretty urls by using environment variables. You co
 
 ## Automatic initialization of database
 
-For MySQL or MariaDB it is possible to use an automatical initalization of the database within the application. User the parameters to DB_* and WT_* to set the corresponding values. To possible error of the initialization start the container in interactve mode using -it.
+For MySQL, MariaDB, or PostgreSQL it is possible to use an automatical initalization of the database within the application. Use the parameters DB_TYPE, DB_* and WT_* to set the corresponding values.
+To debug any errors in the initialization process: Start the container in interactve mode using -it.
 
 ## Support for PostgreSQL or SQLServer
 
@@ -90,6 +91,7 @@ This image contains now the necessary libraries to optionally also select Postgr
 * `-e ENABLE_REMOTE_USER` - if set to TRUE use REMOTE_USER for authentication
 * `-e HEADER_AUTH_VAR` - Sets the name of header variable used for authentication. Default is REMOTE_USER.
 * `-e DISABLE_SSL` - if set to TRUE the image only provides an http entpoint. You should also set the port, because default port 443 is not modifed by this setting.
+* `-e DB_TYPE` - can only be used at first instantiation to set the database type (mysql, postgres, pgsql, postgresql). Password (DB_PASSWORD) must also be set, otherwise no initial setup is performed. If not present the default will be mysql.
 * `-e DB_USER` - can only be used at first instantiation to set the db username. Password (DB_PASSWORD) must also be set (see below), otherwise no initial setup is performed. If not present (only DB_PASSWORD is present) the default will be root.
 * `-e DB_PASSWORD` - can only be used at first instantiation to set the db setting during instantiation and perform initial application setup.
 * `-e DB_HOST` - can only be used at first instantiation to set the db hostname (or ip). Password (DB_PASSWORD) must also be set (see above), otherwise no initial setup is performed. If not present (only DB_PASSWORD is present) the default will be localhost.
