@@ -20,6 +20,7 @@ RUN apt-get update -qq && apt-get upgrade -qy && apt-get install -qy \
     unzip \
     sed \
     mysql-client \
+    postgresql-client \
     php \
     libapache2-mod-php \
     php-mysql \
@@ -87,6 +88,7 @@ ADD Auth.php /Auth.php
 ADD config.ini.php /config.ini.php
 ADD config_blank.ini.php /config_blank.ini.php
 ADD webtrees.sql /webtrees.sql
+ADD webtrees-postgres.sql /webtrees-postgres.sql
 COPY .htaccess /var/www/html/.htaccess
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 770 /var/www/html
