@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: webtrees-postgres
+    environment:
+      POSTGRES_DB: webtrees
+      POSTGRES_USER: webtrees
+      POSTGRES_PASSWORD: webtrees1234
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webtrees"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  webtrees:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webtrees-app
+    ports:
+      - "8080:80"
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=webtrees
+      - DB_PASSWORD=webtrees1234
+      - DB_NAME=webtrees
+      - DB_TYPE=postgres
+      - WT_ADMIN=admin
+      - WT_ADMINPW=admin12345
+      - WT_ADMINMAIL=admin@webtrees.local
+      - DISABLE_SSL=TRUE
+      - PORT=80
+    depends_on:
+      postgres:
+        condition: service_healthy
